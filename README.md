@@ -1,21 +1,25 @@
-# 🔐 Auth Flow
+# 📦 FreightFox Frontend
 
-This branch implements phone number login with OTP verification.
+Frontend for FreightFox — a lightweight Transporter Management System (TMS) built with React, TypeScript, and Vite.
 
-## Components
+## Overview
 
-- `Phone_input.tsx`
-- `OtpInputForm.tsx`
+This repo is structured as an MVP-first development system.  
+Each feature or flow lives in its own feature branch with its own README.
 
-## Flow
+## Tech Stack
 
-1. User enters phone number
-2. Validation enables Continue button
-3. OTP screen appears (masked number)
-4. User enters 4-digit OTP
-5. On success → redirected to dashboard
+- React + Vite  
+- TypeScript  
+- Tailwind CSS + ShadCN UI
 
-## TODO
+## MVP Branches (In Progress)
 
-- Integrate backend OTP endpoints
-- Add loading states and error handling
+- `mvp/feature/auth-flow` → phone number + OTP login  
+- `mvp/feature/dashboard` → transporter shipment overview
+
+## Setup
+
+```bash
+pnpm install
+pnpm dev
