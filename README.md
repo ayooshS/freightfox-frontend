@@ -20,8 +20,3 @@ Each feature or flow lives in its own feature branch with its own README.
 
 - `mvp/feature/dashboard` → transporter shipment overview
 
-## Setup
-
-```bash
-pnpm install
-pnpm dev
