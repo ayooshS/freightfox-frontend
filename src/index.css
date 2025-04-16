@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+@import './variables.css';
+
+
+
+@theme {
+    --font-sans: "Nunito Sans", sans-serif;
+
+
+    --color-text-primary: var(--text-primary);
+    --color-text-secondary: var(--text-secondary);
+    --color-text-tertiary: var(--text-tertiary);
+    --color-text-action: var(--text-action);
+    --color-text-action-hover: var(--text-action-hover);
+    --color-text-action-press: var(--text-action-press);
+    --color-text-disabled: var(--text-disabled);
+    --color-text-information: var(--text-information);
+    --color-text-success: var(--text-success);
+    --color-text-warning: var(--text-warning);
+    --color-text-error: var(--text-error);
+    --color-text-on-action: var(--text-on-action);
+    --color-text-on-hover: var(--text-on-hover);
+    --color-text-on-disable: var(--text-on-disable);
+    --color-text-on-press: var(--text-on-press);
+    --color-text-on-action-danger: var(--text-on-action-danger);
+    --color-text-on-action-danger-hover: var(--text-on-action-danger-hover);
+    --color-text-on-action-danger-press: var(--text-on-action-danger-press);
+
+    --color-surface-page: var(--surface-page);
+    --color-surface-primary: var(--surface-primary);
+    --color-surface-secondary: var(--surface-secondary);
+    --color-surface-tertiary: var(--surface-tertiary);
+    --color-surface-information: var(--surface-information);
+    --color-surface-success: var(--surface-success);
+    --color-surface-warning: var(--surface-warning);
+    --color-surface-error: var(--surface-error);
+    --color-surface-disabled: var(--surface-disabled);
+    --color-surface-action: var(--surface-action);
+    --color-surface-action-hover: var(--surface-action-hover);
+    --color-surface-action-press: var(--surface-action-press);
+    --color-surface-action-disabled: var(--surface-action-disabled);
+    --color-surface-action-danger: var(--surface-action-danger);
+    --color-surface-action-danger-hover: var(--surface-action-danger-hover);
+    --color-surface-action-danger-press: var(--surface-action-danger-press);
+
+    --color-icon-primary: var(--icon-primary);
+    --color-icon-secondary: var(--icon-secondary);
+    --color-icon-tertiary: var(--icon-tertiary);
+    --color-icon-disabled: var(--icon-disabled);
+    --color-icon-information: var(--icon-information);
+    --color-icon-success: var(--icon-success);
+    --color-icon-warning: var(--icon-warning);
+    --color-icon-error: var(--icon-error);
+    --color-icon-action-primary: var(--icon-action-primary);
+    --color-icon-on-action: var(--icon-on-action);
+    --color-icon-on-action-hover: var(--icon-on-action-hover);
+    --color-icon-on-action-press: var(--icon-on-action-press);
+    --color-icon-on-action-disable: var(--icon-on-action-disable);
+    --color-icon-on-action-danger: var(--icon-on-action-danger);
+    --color-icon-on-action-danger-hover: var(--icon-on-action-danger-hover);
+    --color-icon-on-action-danger-press: var(--icon-on-action-danger-press);
+
+    --color-border-primary: var(--border-primary);
+    --color-border-secondary: var(--border-secondary);
+    --color-border-information: var(--border-information);
+    --color-border-success: var(--border-success);
+    --color-border-warning: var(--border-warning);
+    --color-border-error: var(--border-error);
+    --color-border-disabled: var(--border-disabled);
+    --color-border-action: var(--border-action);
+    --color-border-action-press-focus: var(--border-action-press-focus);
+    --color-border-action-hover: var(--border-action-hover);
+    --color-border-on-action-danger-focus: var(--border-on-action-danger-focus);
+    --color-border-on-action-warning-focus: var(--border-on-action-warning-focus);
+
+    /* ---------------------------------------- */
+    /*                SPACING                   */
+    /* ---------------------------------------- */
+
+    --spacing-xss-mobile: var(--scale-50);
+    --spacing-xss-desktop: var(--scale-50);
+
+    --spacing-xs-mobile: var(--scale-100);
+    --spacing-xs-desktop: var(--scale-100);
+
+    --spacing-sm-mobile: var(--scale-150);
+    --spacing-sm-desktop: var(--scale-200);
+
+    --spacing-md-mobile: var(--scale-200);
+    --spacing-md-desktop: var(--scale-400);
+
+    --spacing-lg-mobile: var(--scale-300);
+    --spacing-lg-desktop: var(--scale-600);
+
+    --spacing-xl-mobile: var(--scale-400);
+    --spacing-xl-desktop: var(--scale-800);
+
+    --spacing-xxl-mobile: var(--scale-600);
+    --spacing-xxl-desktop: var(--scale-1100);
+
+    --spacing-x3l-mobile: var(--scale-800);
+    --spacing-x3l-desktop: var(--scale-1400);
+
+    --spacing-x4l-mobile: var(--scale-1100);
+    --spacing-x4l-desktop: var(--scale-1700);
+
+    /* ---------------------------------------- */
+    /*                 RADIUS                   */
+    /* ---------------------------------------- */
+
+    --radius-xs-mobile: var(--scale-50);
+    --radius-xs-desktop: var(--scale-50);
+
+    --radius-sm-mobile: var(--scale-100);
+    --radius-sm-desktop: var(--scale-100);
+
+    --radius-md-desktop: var(--scale-200);
+    --radius-md-mobile: var(--scale-150);
+
+    --radius-lg-desktop: var(--scale-300);
+    --radius-lg-mobile: var(--scale-200);
+
+    --radius-xl-desktop: var(--scale-400);
+    --radius-xl-mobile: var(--scale-300);
+
+    /* ---------------------------------------- */
+    /*                 TYPO                     */
+    /* ---------------------------------------- */
+
+    --text-h1-mobile: var(--fontsize-h1-mobile);
+    --text-h2-mobile: var(--fontsize-h2-mobile);
+    --text-h3-mobile: var(--fontsize-h3-mobile);
+    --text-h4-mobile: var(--fontsize-h4-mobile);
+    --text-h5-mobile: var(--fontsize-h5-mobile);
+    --text-h6-mobile: var(--fontsize-h6-mobile);
+
+    --text-subtitle-lg-mobile: 1.6875rem;
+    --text-subtitle-sm-mobile: 1.4375rem;
+
+    --text-body-lg-mobile: 1.25rem;
+    --text-body-base-mobile: 0.875rem;
+
+    --text-caption-lg-mobile: 0.75rem;
+    --text-caption-sm-mobile: 0.75rem;
+
+    --text-overline-lg-mobile: 0.8125rem;
+    --text-overline-sm-mobile: 0.8125rem;
+
+    /* ---------------------------------------- */
+    /*             D-SHADOW                     */
+    /* ---------------------------------------- */
+
+    --shadow-customprimary: 0 7px 29px rgb(100 100 111 / 0.20)
+
+
+
+
+}
+
+@layer utilities {
+    .font-h1-mobile {
+        font-size: var(--fontsize-h1-mobile);
+        line-height: var(--lineheight-h1-mobile);
+        font-family: var(--font-sans);
+    }
+
+    .font-h2-mobile {
+        font-size: var(--fontsize-h2-mobile);
+        line-height: var(--lineheight-h2-mobile);
+        font-family: var(--font-sans);
+    }
+
+    .font-h3-mobile {
+        font-size: var(--fontsize-h3-mobile);
+        line-height: var(--lineheight-h3-mobile);
+        font-family: var(--font-sans);
+    }
+
+    .font-h4-mobile {
+        font-size: var(--fontsize-h4-mobile);
+        line-height: var(--lineheight-h4-mobile);
+        font-family: var(--font-sans);
+    }
+
+    .font-h5-mobile {
+        font-size: var(--fontsize-h5-mobile);
+        line-height: var(--lineheight-h5-mobile);
+        font-family: var(--font-sans);
+    }
+
+    .font-h6-mobile {
+        font-size: var(--fontsize-h6-mobile);
+        line-height: var(--lineheight-h6-mobile);
+        font-family: var(--font-sans);
+    }
+
+    .font-subtitle-lg-mobile {
+        font-size: var(--fontsize-subtitle-lg-mobile);
+        line-height: var(--lineheight-subtitle-lg-mobile);
+        font-family: var(--font-sans);
+    }
+
+    .font-subtitle-sm-mobile {
+        font-size: var(--fontsize-subtitle-sm-mobile);
+        line-height: var(--lineheight-subtitle-sm-mobile);
+        font-family: var(--font-sans);
+    }
+
+    .font-body-lg-mobile {
+        font-size: var(--fontsize-body-lg-mobile);
+        line-height: var(--lineheight-body-lg-mobile);
+        font-family: var(--font-sans);
+    }
+
+    .font-body-base-mobile {
+        font-size: var(--fontsize-body-base-mobile);
+        line-height: var(--lineheight-body-base-mobile);
+        font-family: var(--font-sans);
+    }
+
+    .font-caption-lg-mobile {
+        font-size: var(--fontsize-caption-lg-mobile);
+        line-height: var(--lineheight-caption-lg-mobile);
+        font-family: var(--font-sans);
+    }
+
+    .font-caption-sm-mobile {
+        font-size: var(--fontsize-caption-sm-mobile);
+        line-height: var(--lineheight-caption-sm-mobile);
+        font-family: var(--font-sans);
+    }
+
+    .font-overline-lg-mobile {
+        font-size: var(--fontsize-overline-lg-mobile);
+        line-height: var(--lineheight-overline-lg-mobile);
+        font-family: var(--font-sans);
+    }
+
+    .font-overline-sm-mobile {
+        font-size: var(--fontsize-overline-sm-mobile);
+        line-height: var(--lineheight-overline-sm-mobile);
+        font-family: var(--font-sans);
+    }
+}
+
+
