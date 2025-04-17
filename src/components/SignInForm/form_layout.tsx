@@ -1,6 +1,6 @@
 // src/components/SignInForm/FormLayout.tsx
 
-import { ReactNode } from "react"
+import {ReactNode} from "react"
 
 type FormLayoutProps = {
     title: string
@@ -13,11 +13,12 @@ export function FormLayout({
                            }: FormLayoutProps) {
     return (
         <main className="min-h-[100dvh] flex items-center justify-center">
-            <div className="w-full bg-surface-page max-w-[480px] flex flex-col justify-center flex-1 self-stretch px-4 py-x3l-mobile">
+            <div
+                className="w-full bg-surface-page max-w-[480px] flex flex-col justify-center flex-1 self-stretch px-4 py-x3l-mobile">
                 {/* Top Section */}
                 <div className="pt-x4l-mobile pb-20">
                     <div className="self-stretch inline-flex justify-start items-center gap-2">
-                        <img src="/Logo.svg" alt="Bizongo" className="h-7 w-8" />
+                        <img src="/Logo.svg" alt="Bizongo" className="h-7 w-8"/>
                         <p className="text-body-lg-mobile text-text-primary">Freight Fox</p>
                     </div>
                     <h1 className="text-h6-mobile text-text-primary capitalize">

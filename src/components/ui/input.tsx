@@ -1,5 +1,5 @@
 import * as React from "react"
-import { cn } from "@/lib/utils"
+import {cn} from "@/lib/utils"
 
 type NativeInputProps = Omit<React.ComponentProps<"input">, "size">
 
@@ -69,4 +69,4 @@ function Input({
     )
 }
 
-export { Input }
+export {Input}

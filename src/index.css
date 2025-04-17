@@ -4,7 +4,6 @@
 @import './variables.css';
 
 
-
 @theme {
     --font-sans: "Nunito Sans", sans-serif;
 
@@ -78,7 +77,6 @@
     /* ---------------------------------------- */
     /*                SPACING                   */
     /* ---------------------------------------- */
-
     --spacing-xss-mobile: var(--scale-50);
     --spacing-xss-desktop: var(--scale-50);
 
@@ -109,7 +107,6 @@
     /* ---------------------------------------- */
     /*                 RADIUS                   */
     /* ---------------------------------------- */
-
     --radius-xs-mobile: var(--scale-50);
     --radius-xs-desktop: var(--scale-50);
 
@@ -128,7 +125,6 @@
     /* ---------------------------------------- */
     /*                 TYPO                     */
     /* ---------------------------------------- */
-
     --text-h1-mobile: var(--fontsize-h1-mobile);
     --text-h2-mobile: var(--fontsize-h2-mobile);
     --text-h3-mobile: var(--fontsize-h3-mobile);
@@ -151,10 +147,7 @@
     /* ---------------------------------------- */
     /*             D-SHADOW                     */
     /* ---------------------------------------- */
-
     --shadow-customprimary: 0 7px 29px rgb(100 100 111 / 0.20)
-
-
 
 
 }
