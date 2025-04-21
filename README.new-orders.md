@@ -13,6 +13,47 @@ This document outlines the structure, data model, and component hierarchy for th
 
 ---
 
+## 📁 Directory Structure
+
+```plaintext
+src
+├── components
+│   ├── Navigation
+│   │   ├── BottomNavigation.tsx
+│   │   └── header_navigation.tsx
+│   ├── NewOrders
+│   │   ├── Drawer
+│   │   │   ├── delivery_dets_drawer.tsx       // Contains map + dynamic distance
+│   │   │   ├── dispatch_dets_drawer.tsx       // ShadCN table showing dispatch info
+│   │   │   └── request_order_drawer.tsx       // Parent drawer with summary, delivery, and dispatch
+│   │   ├── map
+│   │   │   └── map_box.tsx                    // Leaflet map renderer with dotted polyline
+│   │   ├── more_selection.tsx                 // Popover menu for reject action
+│   │   ├── pickup_drop_info.tsx               // Compact address badges used in collapsed card
+│   │   ├── request_card.tsx                   // Expanded card component with confirm CTA
+│   │   └── skeleton_request_card.tsx          // Loading skeleton UI
+│
+├── lib
+│   ├── calculateDistance.ts                   // Haversine formula
+│   ├── extractCityState.ts                    // Splits address to city+state
+│   ├── geocode.ts                             // Calls Nominatim API
+│   └── utils.ts
+│
+├── pages
+│   ├── New_order.tsx                          // Main page: fetches order list
+│   ├── active_trips.tsx
+│   └── my_orders.tsx
+
+├── ui
+│   └── AppShell.tsx                           // Layout shell with header, tabs, and outlet
+
+├── SignInForm
+
+```
+
+
+---
+
 ## 🌐 1. Architecture (App Structure + Navigation)
 
 ```mermaid
@@ -33,51 +74,51 @@ F --> H
 
 %% AppShell Layout
 H --> H1[HeaderNav]
-H1 --> H1a[Avatar with fallback T]
-H1 --> H1b[User Greeting : Good Morning]
-H1 --> H1c[Company Name: Triple MMM Logysmart Pvt Ltd]
+H1 --> H1a[Avatar - T]
+H1 --> H1b[User Greeting]
+H1 --> H1c[Company Name]
 
 H --> H2[Outlet → Page Content]
 H --> H3[BottomNav]
 H3 --> H3a[Tab: New Orders]
 H3 --> H3b[Tab: Active Trips]
 H3 --> H3c[Tab: My Orders]
-
 H --> H4[Toaster]
 
 %% NewOrderPage structure
 H2 --> N[NewOrderPage]
-N --> N1[useEffect → Simulated API]
+N --> N1[useEffect → Load Orders]
 N --> N2[State: loading, error, orders]
 N --> N3[LoadingDots]
-N --> N4[Conditionally render cards]
+N --> N4[Render: Skeleton or RequestCard]
 
-N4 --> N5[RequestCard x N]
-N4 --> N6[SkeletonRequestCard x N]
-N4 --> N7[Error message]
+%% RequestCard Structure
+N4 --> RC[RequestCard]
+RC --> RC1[Header: PO, Material, Menu]
+RC --> RC2[PickupDropInfo]
+RC --> RC3[Trigger → RequestDetailDrawer]
 
-%% RequestCard decomposition
-N5 --> RC[RequestCard]
-RC --> RC1[Header: PO, Material, MoreSelection]
-RC --> RC2[Separator]
-RC --> RC3[Product Info: Name, Quantity, Rate]
-RC --> RC4[PickupDropInfo]
-RC --> RC5[Confirm Button]
+%% Drawer Content
+RC3 --> DR[RequestDetailDrawer]
+DR --> DR1[DrawerHeader: Buyer Name, PO]
+DR --> DR2[Product Summary]
+DR --> DR3[DeliveryDetailsDrawer]
+DR --> DR4[DispatchDetailsDrawer]
+DR --> DR5[Sticky CTA]
 
-RC1 --> MS[MoreSelection]
-MS --> MS1[Popover Menu]
-MS1 --> MS2[Reject CTA + showToast]
+%% DeliveryDetailsDrawer
+DR3 --> M[MapBox]
+M --> M1[Marker: Pickup]
+M --> M2[Marker: Drop]
+M --> M3[Dotted Polyline]
+DR3 --> DCalc[Distance: Haversine]
 
-RC4 --> PD[PickupDropInfo]
-PD --> PD1[Pickup Address + Badge]
-PD --> PD2[Drop Address + Badge]
+%% DispatchDetailsDrawer
+DR4 --> T[ShadCN Table]
+T --> T1[Vehicle]
+T --> T2[Size]
+T --> T3[ETA]
 
-%% Skeleton
-N6 --> SK[SkeletonRequestCard]
-SK --> SK1[Fake PO Header]
-SK --> SK2[Fake Product Info]
-SK --> SK3[Fake Pickup/Drop Info]
-SK --> SK4[Fake Confirm Button]
 
 ```
 
@@ -89,11 +130,26 @@ SK --> SK4[Fake Confirm Button]
 graph TD
   NewOrderPage --> RequestCard
   NewOrderPage --> SkeletonRequestCard
+
   RequestCard --> MoreSelection
   RequestCard --> PickupDropInfo
+  RequestCard --> RequestDetailDrawer
+
+  RequestDetailDrawer --> DrawerHeader
+  RequestDetailDrawer --> DeliveryDetailsDrawer
+  RequestDetailDrawer --> DispatchDetailsDrawer
+  RequestDetailDrawer --> CTAButton
+
+  DeliveryDetailsDrawer --> MapBox
+  MapBox --> GeocodeUtils
+  MapBox --> DistanceCalc
+
+  DispatchDetailsDrawer --> ShadCNTable
+
   AppShell --> HeaderNav
   AppShell --> BottomNav
   AppShell --> Outlet[Outlet → NewOrderPage]
+
 ```
 
 #### Explanation:
@@ -101,6 +157,13 @@ graph TD
 - `NewOrderPage` orchestrates data fetching and renders child UI components
 - `RequestCard` is the core UI unit rendered per order
 - `AppShell wraps` the entire layout with consistent header and bottom navigation
+- `RequestDetailDrawer` now branches into 3 key segments:
+  - `DeliveryDetailsDrawer` → handles geocoding, distance, and map
+  - `DispatchDetailsDrawer` → renders the dispatch plan using a ShadCN table
+  - `CTAButton` → sticky action button for Accept & Continue
+- `MapBox` now clearly connects to:
+  - `GeocodeUtils` → from `lib/geocode.ts` & `extractCityState.ts`  
+  - `DistanceCalc` → from `lib/calculateDistance.ts`
 
 ---
 
@@ -108,17 +171,30 @@ graph TD
 
 ```mermaid
 graph TD
-  OrderType[Order Type: poNumber, material, productName, etc.]
 
-  OrderType --> NewOrderPage
-  OrderType --> RequestCard
-  OrderType --> PickupDropInfo
-  OrderType --> MoreSelection
+OrderType[Order Type: poNumber, material, productName, quantity, rate, pickupAddress, dropAddress, buyerName, dispatchData]
+
+OrderType --> NewOrderPage
+OrderType --> RequestCard
+OrderType --> MoreSelection
+OrderType --> PickupDropInfo
+OrderType --> RequestDetailDrawer
+OrderType --> DeliveryDetailsDrawer
+OrderType --> DispatchDetailsDrawer
+
 ```
 
 #### Order Object Shape:
 
 ```ts
+// lib/types.ts
+
+type DispatchEntry = {
+  vehicle: number
+  size: number
+  eta: string
+}
+
 type Order = {
   poNumber: string
   material: string
@@ -127,7 +203,10 @@ type Order = {
   rate: string
   pickupAddress: string
   dropAddress: string
+  buyerName: string
+  dispatchData: DispatchEntry[]
 }
+
 ```
 #### Usage:
 - Shared across `NewOrderPage` and all its child components
@@ -148,6 +227,8 @@ class RequestCard {
   +string rate
   +string pickupAddress
   +string dropAddress
+  +string buyerName
+  +DispatchEntry[] dispatchData
   +onReject(): void
   +onConfirm(): void
 }
@@ -163,31 +244,55 @@ class PickupDropInfo {
   +string dropAddress
 }
 
-class BottomNav {
-  +string activePath
+class RequestDetailDrawer {
+  +string poNumber
+  +string buyerName
+  +string productDetails
+  +string quantity
+  +string pickupAddress
+  +string dropAddress
+  +string rate
+  +DispatchEntry[] dispatchData
 }
 
-class HeaderNav {
-  ~ No props required
+class DeliveryDetailsDrawer {
+  +string pickupAddress
+  +string dropAddress
+  +string? distance
 }
 
+class DispatchDetailsDrawer {
+  +DispatchEntry[] dispatchData
+  +number rate
+}
 
+class DispatchEntry {
+  +number vehicle
+  +number size
+  +string eta
+}
 ```
 ---
 
 ### ✅ Highlights
-- ⛓️ Fully modular and reusable component structure
-- 📦 Data-driven architecture with shared `Order` type
-- 🔄 Seamless UX with loading state and toast feedback
-- 🧼 Easy to extend with PO detail view, filter, or pagination
+- 🧱 Modular component design with clean separation of layout, data cards, and drawers
+- 📦 Data-driven architecture using a consistent Order type across all UI layers
+- 🔄 Seamless UX flow with loading skeletons, toast notifications, and error boundaries
+- 📍 Map integration using Leaflet with pickup/drop markers and dashed polyline
+- 🧮 Dynamic distance calculation using Haversine formula from lat/lng
+- 📋 Dispatch plan visualization via ShadCN Table with scroll-safe, mobile-optimized layout
+- ✨ Reusable utilities like extractCityState, geocodeAddress, and calculateDistance for clean side-effect handling
 
 ---
 
-### 🚀 Suggested Improvements (Future Roadmap)
- - Integrate real API via `fetchOrders` hook or TanStack Query
- - Add `Empty State` when `orders.length === 0`
- - Navigate to PO Detail Page on confirm
- - Swipe-to-Reject or Pull-to-Refresh for mobile
- - Add tags instead of single product string
+### 🚀 (Future Roadmap)
+- 🔗 Integrate real API using fetchOrders or TanStack Query for paginated, cache-friendly data fetching
+- 🚫 Add Empty State UI when no orders are available
+- 🔍 Implement filters (e.g., by material, buyer, route length)
+- 📄 Add PO Detail Page to view order-specific timeline, logs, and route tracking
+- 📱 Enable swipe-to-reject or pull-to-refresh gestures on mobile
+- 🏷 Replace product string with chip-style product tags
+- 📦 Integrate transport/dispatch analytics per vehicle or material type
+- 🔐 Add role-based visibility on actions like "Accept & Continue" or "Reject"
 
 
