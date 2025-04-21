@@ -15,11 +15,13 @@ Each feature or flow lives in its own feature branch with its own README.
 
 ## MVP Branches (In Progress)
 
-- `mvp/feature/auth-flow` → phone number + OTP login  
-📚 Feature Docs: - [Auth Flow](https://github.com/ayooshS/freightfox-frontend/blob/mvp/feature/auth-flow/README.auth-flow.md)
+- `mvp/feature/auth-flow` → phone number + OTP login
+  📚 Feature Docs: - [Auth Flow](https://github.com/ayooshS/freightfox-frontend/blob/mvp/feature/auth-flow/README.auth-flow.md)
 
-- `mvp/feature/new-order` → Incoming ship orders 
+
+- `mvp/feature/new-order` → Incoming ship orders
 📚 Feature Docs: - [new-orders](https://github.com/ayooshS/freightfox-frontend/blob/main/README.new-orders.md)
+
 
 
 ## High-Level User flow
