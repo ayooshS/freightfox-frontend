@@ -2,6 +2,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import './variables.css';
+@import "leaflet/dist/leaflet.css";
+
 
 
 @theme {
@@ -147,14 +149,11 @@
     /* ---------------------------------------- */
     /*             D-SHADOW                     */
     /* ---------------------------------------- */
-<<<<<<< Updated upstream
-    --shadow-customprimary: 0 7px 29px rgb(100 100 111 / 0.20)
-=======
 
     --shadow-customprimary: 0 7px 29px rgb(100 100 111 / 0.20);
     --shadow-customCard: 0 8px 24px rgba(149, 157, 165, 0.12);
     --box-shadow-customCard:  0 8px 24px rgba(149, 157, 165, 0.05);
->>>>>>> Stashed changes
+
 
 
 }

@@ -1,19 +1,21 @@
+---
+title: Untitled doc (3)
+---
+<SwmSnippet path="/src/components/NewOrders/request_card.tsx" line="1">
+
+---
+
+&nbsp;
+
+```tsx
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
 import { MoreSelection } from "@/components/NewOrders/more_selection.tsx"
 import { Separator } from "@/components/ui/separator.tsx"
 import { PickupDropInfo } from "@/components/NewOrders/pickup_drop_info.tsx"
-import RequestDetailDrawer from "@/components/NewOrders/Drawer/request_order_drawer.tsx";
-
-type DispatchEntry = {
-    vehicle: number
-    size: number
-    eta: string
-}
 
 type RequestCardProps = {
-    buyerName: string
     poNumber: string
     material: string
     productName: string
@@ -21,13 +23,11 @@ type RequestCardProps = {
     rate: string
     pickupAddress: string
     dropAddress: string
-    dispatchData: DispatchEntry[]
     onReject: () => void
     onConfirm: () => void
 }
 
 export default function RequestCard({
-                                        buyerName,
                                         poNumber,
                                         material,
                                         productName,
@@ -36,7 +36,7 @@ export default function RequestCard({
                                         pickupAddress,
                                         dropAddress,
                                         onReject,
-                                        dispatchData,
+                                        onConfirm,
                                     }: RequestCardProps) {
     return (
         <Card className="rounded-xl-mobile bg-surface-primary p-4 space-y-3">
@@ -74,22 +74,16 @@ export default function RequestCard({
             <PickupDropInfo pickupAddress={pickupAddress} dropAddress={dropAddress} />
 
             {/* CTA */}
-
-            <RequestDetailDrawer
-                buyerName={buyerName}
-                poNumber={poNumber}
-                productDetails={productName}
-                quantity={quantity}
-                pickupAddress={pickupAddress}
-                dropAddress={dropAddress}
-                rate={rate}
-                dispatchData={dispatchData}  // ✅ pass this
-                triggerButton={
-                    <Button variant="default" size="default" className="w-full mt-2">
-                        Review & Confirm
-                    </Button>
-                }
-            />
+            <Button variant="default" size="default" className="w-full mt-2" onClick={onConfirm}>
+                Review & Confirm
+            </Button>
         </Card>
     )
 }
+```
+
+---
+
+</SwmSnippet>
+
+<SwmMeta version="3.0.0" repo-id="Z2l0aHViJTNBJTNBZnJlaWdodGZveC1mcm9udGVuZCUzQSUzQWF5b29zaFM=" repo-name="freightfox-frontend"><sup>Powered by [Swimm](https://app.swimm.io/)</sup></SwmMeta>

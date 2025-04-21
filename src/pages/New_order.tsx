@@ -3,6 +3,12 @@ import RequestCard from "@/components/NewOrders/request_card"
 import {SkeletonRequestCard} from "@/components/NewOrders/skeleton_request_card.tsx";
 // import { fetchOrders } from "@/lib/api" ← when backend is ready
 
+type DispatchEntry = {
+    vehicle: number
+    size: number
+    eta: string
+}
+
 type Order = {
     poNumber: string
     material: string
@@ -11,6 +17,8 @@ type Order = {
     rate: string
     pickupAddress: string
     dropAddress: string
+    buyerName: string
+    dispatchData: DispatchEntry[]
 }
 
 export function NewOrderPage() {
@@ -28,27 +36,41 @@ export function NewOrderPage() {
                         material: "Aluminium",
                         productName: "Billets CH10, Wire Rod Coil, Sow ingot",
                         quantity: "20",
-                        rate: "3500",
+                        rate: "3500.83",
                         pickupAddress: "NALCO, Damanjodi, Odisha, 763008",
-                        dropAddress: "Acme Pvt Ltd, Loha Bazar, Hirapur Colony, Raipur, Sondongari, Chhattisgarh, 334499",
+                        dropAddress: "Acme Pvt. Ltd, Loha Bazar, Hirapur Colony, Raipur, Chhattisgarh 492099",
+                        buyerName: "Acme Pvt Ltd",
+                        dispatchData: [
+                            { vehicle: 1, size: 20, eta: "4/05/25" },
+                            { vehicle: 2, size: 20, eta: "6/05/25" },
+                        ],
                     },
                     {
                         poNumber: "924781",
                         material: "Steel",
                         productName: "Slab MS Prime, Round Bar",
                         quantity: "35",
-                        rate: "4200",
+                        rate: "4200.93",
                         pickupAddress: "JSW Steel Plant, Bellary, Karnataka",
                         dropAddress: "Metro Infra, Andheri East, Mumbai, Maharashtra",
+                        buyerName: "Metro Infra",
+                        dispatchData: [
+                            { vehicle: 1, size: 15, eta: "3/05/25" },
+                            { vehicle: 2, size: 20, eta: "5/05/25" },
+                        ],
                     },
                     {
                         poNumber: "781294",
                         material: "Copper",
                         productName: "Copper Wire, Cathode Sheets",
                         quantity: "10",
-                        rate: "7200",
+                        rate: "7200.36",
                         pickupAddress: "Hindustan Copper Ltd, Jharkhand",
-                        dropAddress: "Electro Tech, Salt Lake, Kolkata, West Bengal",
+                        dropAddress: "Electro Tech, Bidhannagar , Kolkata, West Bengal",
+                        buyerName: "Electro Tech",
+                        dispatchData: [
+                            { vehicle: 1, size: 10, eta: "2/05/25" },
+                        ],
                     },
                 ]
 
