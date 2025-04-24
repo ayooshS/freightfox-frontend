@@ -10,13 +10,14 @@ class Database:
     RANGE_NAME = 'Sheet1!A:J'  # Adjust range as needed
     
     @classmethod
-    def connect_db(cls):
+    async def connect_db(cls):
         # Use service account credentials
         credentials = service_account.Credentials.from_service_account_info(
             json.loads(os.getenv('GOOGLE_CREDENTIALS')),
             scopes=['https://www.googleapis.com/auth/spreadsheets']
         )
         cls.service = build('sheets', 'v4', credentials=credentials)
+        return cls.service
     
     @classmethod
     def get_db(cls):
