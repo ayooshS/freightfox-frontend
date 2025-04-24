@@ -39,7 +39,7 @@ class Database:
         if not values:
             return [], 0
         
-        print ("Values: ", values)    
+        print("Values: ", values)    
         orders = []
         for row in values[1:]:  # Skip header row
             if len(row) >= 10:
@@ -52,7 +52,7 @@ class Database:
                     "booked_rate": float(row[5]),
                     "product_sku": row[6],
                     "product_description": row[7],
-                    "dispatch_plan": json.loads(row[8].replace("'", '"')),  # Convert string to proper JSON format
+                    "dispatch_plan": json.loads(row[8].replace("'", '"')),
                     "status": row[9]
                 }
                 
@@ -82,7 +82,26 @@ class Database:
         sheets = cls.get_db()
         values = [[
             order_data["ship_order_id"],
-
+            order_data["order_qty"],
+            order_data["unit_of_measurement"],
+            order_data["pickup_address"],
+            order_data["delivery_address"],
+            order_data["booked_rate"],
+            order_data["product_sku"],
+            order_data["product_description"],
+            json.dumps(order_data["dispatch_plan"]),
+            order_data["status"],
+            order_data["transporter_id"]
+        ]]
+        
+        body = {'values': values}
+        result = sheets.values().append(
+            spreadsheetId=cls.SPREADSHEET_ID,
+            range=cls.RANGE_NAME,
+            valueInputOption='RAW',
+            body=body
+        ).execute()
+        return result
 
     @classmethod
     async def update_ship_order_status(cls, ship_order_id: str, transporter_id: str, new_status: str):
@@ -122,24 +141,3 @@ class Database:
             return True
         except Exception:
             return False
-
-            order_data["order_qty"],
-            order_data["unit_of_measurement"],
-            order_data["pickup_address"],
-            order_data["delivery_address"],
-            order_data["booked_rate"],
-            order_data["product_sku"],
-            order_data["product_description"],
-            json.dumps(order_data["dispatch_plan"]),
-            order_data["status"],
-            order_data["transporter_id"]
-        ]]
-        
-        body = {'values': values}
-        result = sheets.values().append(
-            spreadsheetId=cls.SPREADSHEET_ID,
-            range=cls.RANGE_NAME,
-            valueInputOption='RAW',
-            body=body
-        ).execute()
-        return result
