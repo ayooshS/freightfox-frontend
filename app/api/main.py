@@ -37,7 +37,7 @@ async def create_ship_order(order: ShipOrderCreate):
         result = await Database.insert_ship_order(ship_order.model_dump())
         
         if result:
-            return ShipOrderResponse(ship_order_id=order.ship_order_id)
+            return ShipOrderResponse(**order.model_dump())
         else:
             raise HTTPException(status_code=500, detail="Failed to create ship order")
             
