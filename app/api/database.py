@@ -52,7 +52,7 @@ class Database:
                     "booked_rate": float(row[5]),
                     "product_sku": row[6],
                     "product_description": row[7],
-                    "dispatch_plan": json.loads(row[8]),  # Convert string representation back to list
+                    "dispatch_plan": json.loads(row[8].replace("'", '"')),  # Convert string to proper JSON format
                     "status": row[9]
                 }
                 
