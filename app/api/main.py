@@ -48,10 +48,7 @@ async def create_ship_order(order: ShipOrderCreate):
         raise HTTPException(status_code=400, detail=f"Error processing request: {str(e)}")
 
 @app.get("/v1/ship-orders", response_model=ShipOrderList)
-async def get_ship_orders(
-    filters: ShipOrderFilter = Depends(),
-    transporter_id: Optional[str] = None
-):
+async def get_ship_orders(filters: ShipOrderFilter = Depends(),transporter_id: Optional[str] = None):
     try:
         db = Database.get_db()
         if not db:
@@ -65,14 +62,10 @@ async def get_ship_orders(
         return ShipOrderList(
             orders=[ShipOrderResponse(**order) for order in orders],
             total_count=total_count
-
+        )
 
 @app.put("/v1/ship-orders/{ship_order_id}/status")
-async def update_ship_order_status(
-    ship_order_id: str,
-    transporter_id: str,
-    action: str
-):
+async def update_ship_order_status(ship_order_id: str, transporter_id: str, action: str):
     try:
         db = Database.get_db()
         if not db:
@@ -108,8 +101,3 @@ async def update_ship_order_status(
         raise he
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-        )
-        
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
