@@ -5,6 +5,12 @@ from unittest.mock import patch, MagicMock
 from app.api.main import app
 from app.api.database import Database
 
+import sys
+import os
+# Add the parent directory to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+from app.api.main import app
+
 client = TestClient(app)
 
 @pytest.fixture
