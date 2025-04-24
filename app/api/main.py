@@ -34,9 +34,9 @@ async def create_ship_order(order: ShipOrderCreate):
             raise HTTPException(status_code=500, detail="Database connection not available")
         
         ship_order = ShipOrder(**order.model_dump())
-        result = await db.ship_orders.insert_one(ship_order.model_dump())
+        result = await Database.insert_ship_order(ship_order.model_dump())
         
-        if result.inserted_id:
+        if result:
             return ShipOrderResponse(ship_order_id=order.ship_order_id)
         else:
             raise HTTPException(status_code=500, detail="Failed to create ship order")
