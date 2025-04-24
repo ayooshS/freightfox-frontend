@@ -63,6 +63,8 @@ async def get_ship_orders(filters: ShipOrderFilter = Depends(),transporter_id: O
             orders=[ShipOrderResponse(**order) for order in orders],
             total_count=total_count
         )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.put("/v1/ship-orders/{ship_order_id}/status")
 async def update_ship_order_status(ship_order_id: str, transporter_id: str, action: str):
