@@ -95,12 +95,12 @@ export function NewOrderPage() {
     }
 
     return (
-        <div>
+        <main>
             <div className="flex flex-col gap-5">
                 <div>
-          <span className="font-body-lg-mobile font-bold text-text-primary">
-            {loading ? <LoadingDots /> : orders.length}
-          </span>
+                    <span className="font-body-lg-mobile font-bold text-text-primary">
+                    {loading ? <LoadingDots /> : orders.length}
+                     </span>
                     <span className="font-body-lg-mobile text-text-secondary"> New Orders</span>
                 </div>
 
@@ -125,6 +125,6 @@ export function NewOrderPage() {
                     </p>
                 )}
             </div>
-        </div>
+        </main>
     )
 }
