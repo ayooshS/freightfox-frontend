@@ -4,3 +4,19 @@ modules = ["nodejs-20"]
 localPort = 5173
 externalPort = 80
 exposeLocalhost = true
+
+[nix]
+channel = "stable-24_05"
+packages = ["libxcrypt"]
+
+[workflows]
+runButton = "Run API"
+
+[[workflows.workflow]]
+name = "Run API"
+author = 34720231
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "uvicorn app.api.main:app --host 0.0.0.0 --port 5000 --reload"
