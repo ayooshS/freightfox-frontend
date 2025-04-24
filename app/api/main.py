@@ -56,7 +56,8 @@ async def get_ship_orders(filters: ShipOrderFilter = Depends(),transporter_id: O
             
         orders, total_count = await Database.get_ship_orders(
             page_size=filters.page_size,
-            status_filter=filters.status_filter
+            status_filter=filters.status_filter,
+            transporter_id=transporter_id
         )
         
         return ShipOrderList(
