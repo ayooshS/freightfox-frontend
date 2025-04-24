@@ -21,6 +21,7 @@ class ShipOrderCreate(BaseModel):
 
 class ShipOrderResponse(BaseModel):
     ship_order_id: str
+    transporter_id: str
     status: str = "created"
     order_qty: int
     unit_of_measurement: str

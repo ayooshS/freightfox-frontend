@@ -43,8 +43,13 @@ class Database:
         orders = []
         for row in values[1:]:  # Skip header row
             if len(row) >= 10:
+                # Skip if transporter_id doesn't match
+                if transporter_id and (len(row) < 11 or row[10] != transporter_id):
+                    continue
+                    
                 order = {
                     "ship_order_id": row[0],
+                    "transporter_id": row[10] if len(row) >= 11 else "",
                     "order_qty": int(row[1]),
                     "unit_of_measurement": row[2],
                     "pickup_address": row[3],
@@ -57,9 +62,6 @@ class Database:
                 }
                 
                 # Apply status filtering
-                # Filter by transporter_id first
-                if transporter_id and row[10] != transporter_id:
-                    continue
                     
                 # Then apply status filter
                 if status_filter:
