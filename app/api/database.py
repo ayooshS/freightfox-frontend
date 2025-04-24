@@ -56,10 +56,14 @@ class Database:
                     "status": row[9]
                 }
                 
-                if status_filter == "new" and order["status"] != "pending":
-                    continue
-                    
-                orders.append(order)
+                # Apply status filtering
+                if status_filter:
+                    if status_filter == "all":
+                        orders.append(order)
+                    elif order["status"].lower() == status_filter.lower():
+                        orders.append(order)
+                else:
+                    orders.append(order)
                    
         total_count = len(orders)
         # Apply pagination

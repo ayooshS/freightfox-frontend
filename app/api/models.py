@@ -31,7 +31,7 @@ class ShipOrderResponse(BaseModel):
     dispatch_plan: List[DispatchPlanEntry]
 
 class ShipOrder(ShipOrderCreate):
-    status: str = "pending"
+    status: str = "new"  # Default status is now "new"
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
 
