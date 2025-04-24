@@ -60,7 +60,7 @@ class Database:
                     continue
                     
                 orders.append(order)
-        print("Orders: ", orders)                
+                   
         total_count = len(orders)
         # Apply pagination
         start_idx = 0
