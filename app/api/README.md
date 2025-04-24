@@ -12,10 +12,9 @@ http://0.0.0.0:5000
 Check if the API is running.
 
 ```bash
-# Request
-curl -X GET http://0.0.0.0:5000/
+GET /
 
-# Response
+Response 200 OK:
 {
     "message": "FreightFox API is running"
 }
@@ -25,11 +24,12 @@ curl -X GET http://0.0.0.0:5000/
 Create a new shipping order.
 
 ```bash
-# Request
-curl -X POST http://0.0.0.0:5000/v1/ship-orders \
-  -H "Content-Type: application/json" \
-  -d '{
+POST /v1/ship-orders
+
+Request Body:
+{
     "ship_order_id": "SO123",
+    "transporter_id": "T123",
     "order_qty": 100,
     "unit_of_measurement": "MT",
     "pickup_address": "Mumbai Port, Maharashtra",
@@ -38,16 +38,17 @@ curl -X POST http://0.0.0.0:5000/v1/ship-orders \
     "product_sku": "STEEL-001",
     "product_description": "Steel Plates",
     "dispatch_plan": [
-      {
-        "reporting_date": "2024-02-25",
-        "vehicle_capacity": 20
-      }
+        {
+            "reporting_date": "2024-02-25",
+            "vehicle_capacity": 20
+        }
     ]
-  }'
+}
 
-# Response
+Response 201 Created:
 {
     "ship_order_id": "SO123",
+    "transporter_id": "T123",
     "status": "created",
     "order_qty": 100,
     "unit_of_measurement": "MT",
@@ -57,10 +58,10 @@ curl -X POST http://0.0.0.0:5000/v1/ship-orders \
     "product_sku": "STEEL-001",
     "product_description": "Steel Plates",
     "dispatch_plan": [
-      {
-        "reporting_date": "2024-02-25",
-        "vehicle_capacity": 20
-      }
+        {
+            "reporting_date": "2024-02-25",
+            "vehicle_capacity": 20
+        }
     ]
 }
 ```
@@ -69,15 +70,20 @@ curl -X POST http://0.0.0.0:5000/v1/ship-orders \
 Retrieve a list of ship orders with optional filtering.
 
 ```bash
-# Request
-curl -X GET "http://0.0.0.0:5000/v1/ship-orders?page_size=10&status_filter=new"
+GET /v1/ship-orders?page_size=10&status_filter=new&transporter_id=T123
 
-# Response
+Query Parameters:
+- page_size: Number of records per page (default: 10)
+- status_filter: Filter by status ("new", "accepted", "rejected", "all")
+- transporter_id: Filter by transporter ID (optional)
+
+Response 200 OK:
 {
     "orders": [
         {
             "ship_order_id": "SO123",
-            "status": "pending",
+            "transporter_id": "T123",
+            "status": "new",
             "order_qty": 100,
             "unit_of_measurement": "MT",
             "pickup_address": "Mumbai Port, Maharashtra",
@@ -97,50 +103,35 @@ curl -X GET "http://0.0.0.0:5000/v1/ship-orders?page_size=10&status_filter=new"
 }
 ```
 
-## Data Models
+### 4. Update Ship Order Status
+Accept or reject a ship order.
 
-### Ship Order Create
-```typescript
+```bash
+PUT /v1/ship-orders/{ship_order_id}/status?transporter_id={transporter_id}&action={action}
+
+Path Parameters:
+- ship_order_id: ID of the ship order
+
+Query Parameters:
+- transporter_id: ID of the transporter
+- action: "accept" or "reject"
+
+Response 200 OK:
 {
-    ship_order_id: string
-    order_qty: number
-    unit_of_measurement: string
-    pickup_address: string
-    delivery_address: string
-    booked_rate: number
-    product_sku: string
-    product_description: string
-    dispatch_plan: Array<{
-        reporting_date: string
-        vehicle_capacity: number
-    }>
+    "ship_order_id": "SO123",
+    "transporter_id": "T123",
+    "status": "accepted",
+    "message": "Ship Order accepted successfully"
 }
-```
 
-### Ship Order Response
-```typescript
+Response 404 Not Found:
 {
-    ship_order_id: string
-    status: string
-    order_qty: number
-    unit_of_measurement: string
-    pickup_address: string
-    delivery_address: string
-    booked_rate: number
-    product_sku: string
-    product_description: string
-    dispatch_plan: Array<{
-        reporting_date: string
-        vehicle_capacity: number
-    }>
+    "detail": "Ship Order not found"
 }
-```
 
-### Ship Order Filter
-```typescript
+Response 500 Internal Server Error:
 {
-    page_size: number  // default: 10
-    status_filter: string | null  // "new" or "all"
+    "detail": "Failed to update ship order status"
 }
 ```
 
@@ -156,4 +147,5 @@ Common HTTP Status Codes:
 - 200: Success
 - 201: Created
 - 400: Bad Request
+- 404: Not Found
 - 500: Internal Server Error
