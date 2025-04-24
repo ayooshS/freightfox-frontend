@@ -41,8 +41,10 @@ async def create_ship_order(order: ShipOrderCreate):
         else:
             raise HTTPException(status_code=500, detail="Failed to create ship order")
             
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail="Invalid JSON format. Please ensure all property names are enclosed in double quotes")
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=f"Error processing request: {str(e)}")
 
 @app.get("/v1/ship-orders", response_model=ShipOrderList)
 async def get_ship_orders(filters: ShipOrderFilter = Depends()):
