@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from .database import Database
 from .models import ShipOrderCreate, ShipOrderResponse, ShipOrder, ShipOrderFilter, ShipOrderList
+from typing import Optional
 
 app = FastAPI(title="FreightFox API")
 
@@ -47,7 +48,10 @@ async def create_ship_order(order: ShipOrderCreate):
         raise HTTPException(status_code=400, detail=f"Error processing request: {str(e)}")
 
 @app.get("/v1/ship-orders", response_model=ShipOrderList)
-async def get_ship_orders(filters: ShipOrderFilter = Depends()):
+async def get_ship_orders(
+    filters: ShipOrderFilter = Depends(),
+    transporter_id: Optional[str] = None
+):
     try:
         db = Database.get_db()
         if not db:
@@ -61,6 +65,50 @@ async def get_ship_orders(filters: ShipOrderFilter = Depends()):
         return ShipOrderList(
             orders=[ShipOrderResponse(**order) for order in orders],
             total_count=total_count
+
+
+@app.put("/v1/ship-orders/{ship_order_id}/status")
+async def update_ship_order_status(
+    ship_order_id: str,
+    transporter_id: str,
+    action: str
+):
+    try:
+        db = Database.get_db()
+        if not db:
+            raise HTTPException(status_code=500, detail="Database connection not available")
+            
+        # Validate action
+        if action.lower() not in ["accept", "reject"]:
+            raise HTTPException(status_code=400, detail="Invalid action. Must be 'accept' or 'reject'")
+            
+        # Get order to verify it exists
+        orders, _ = await Database.get_ship_orders(1, None, transporter_id)
+        order = next((o for o in orders if o["ship_order_id"] == ship_order_id), None)
+        
+        if not order:
+            raise HTTPException(status_code=404, detail="Ship Order not found")
+            
+        new_status = "accepted" if action.lower() == "accept" else "rejected"
+        
+        # Update order status in database
+        result = await Database.update_ship_order_status(ship_order_id, transporter_id, new_status)
+        
+        if result:
+            return {
+                "ship_order_id": ship_order_id,
+                "transporter_id": transporter_id,
+                "status": new_status,
+                "message": f"Ship Order {new_status} successfully"
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Failed to update ship order status")
+            
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
         )
         
     except Exception as e:

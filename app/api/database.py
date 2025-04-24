@@ -28,7 +28,7 @@ class Database:
         return cls.service.spreadsheets()
     
     @classmethod
-    async def get_ship_orders(cls, page_size: int, status_filter: Optional[str] = None):
+    async def get_ship_orders(cls, page_size: int, status_filter: Optional[str] = None, transporter_id: Optional[str] = None):
         sheets = cls.get_db()
         result = sheets.values().get(
             spreadsheetId=cls.SPREADSHEET_ID,
@@ -57,6 +57,11 @@ class Database:
                 }
                 
                 # Apply status filtering
+                # Filter by transporter_id first
+                if transporter_id and row[10] != transporter_id:
+                    continue
+                    
+                # Then apply status filter
                 if status_filter:
                     if status_filter == "all":
                         orders.append(order)
@@ -77,6 +82,47 @@ class Database:
         sheets = cls.get_db()
         values = [[
             order_data["ship_order_id"],
+
+
+    @classmethod
+    async def update_ship_order_status(cls, ship_order_id: str, transporter_id: str, new_status: str):
+        sheets = cls.get_db()
+        result = sheets.values().get(
+            spreadsheetId=cls.SPREADSHEET_ID,
+            range=cls.RANGE_NAME
+        ).execute()
+        
+        values = result.get('values', [])
+        if not values:
+            return False
+            
+        # Find the row to update
+        row_idx = None
+        for idx, row in enumerate(values):
+            if (len(row) >= 11 and 
+                row[0] == ship_order_id and 
+                row[10] == transporter_id):
+                row_idx = idx
+                break
+                
+        if row_idx is None:
+            return False
+            
+        # Update the status
+        range_name = f'Sheet1!J{row_idx + 1}'
+        body = {'values': [[new_status]]}
+        
+        try:
+            sheets.values().update(
+                spreadsheetId=cls.SPREADSHEET_ID,
+                range=range_name,
+                valueInputOption='RAW',
+                body=body
+            ).execute()
+            return True
+        except Exception:
+            return False
+
             order_data["order_qty"],
             order_data["unit_of_measurement"],
             order_data["pickup_address"],
@@ -85,7 +131,8 @@ class Database:
             order_data["product_sku"],
             order_data["product_description"],
             json.dumps(order_data["dispatch_plan"]),
-            order_data["status"]
+            order_data["status"],
+            order_data["transporter_id"]
         ]]
         
         body = {'values': values}

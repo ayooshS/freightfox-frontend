@@ -9,6 +9,7 @@ class DispatchPlanEntry(BaseModel):
 
 class ShipOrderCreate(BaseModel):
     ship_order_id: str
+    transporter_id: str
     order_qty: int
     unit_of_measurement: str
     pickup_address: str
