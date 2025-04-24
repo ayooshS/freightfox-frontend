@@ -34,11 +34,12 @@ class Database:
             spreadsheetId=cls.SPREADSHEET_ID,
             range=cls.RANGE_NAME
         ).execute()
-        
+
+        print("Enter db.get_ship_orders")
         values = result.get('values', [])
         if not values:
             return [], 0
-            
+        print ("Values: ", values)    
         orders = []
         for row in values[1:]:  # Skip header row
             if len(row) >= 10:
@@ -59,7 +60,7 @@ class Database:
                     continue
                     
                 orders.append(order)
-                
+        print("Orders: ", orders)                
         total_count = len(orders)
         # Apply pagination
         start_idx = 0
