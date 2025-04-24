@@ -34,3 +34,11 @@ class ShipOrder(ShipOrderCreate):
     status: str = "pending"
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
+
+class ShipOrderFilter(BaseModel):
+    page_size: int = 10
+    status_filter: Optional[str] = None  # "new" or "all"
+
+class ShipOrderList(BaseModel):
+    orders: List[ShipOrderResponse]
+    total_count: int

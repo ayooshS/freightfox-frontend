@@ -2,7 +2,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from .database import Database
-from .models import ShipOrderCreate, ShipOrderResponse, ShipOrder
+from .models import ShipOrderCreate, ShipOrderResponse, ShipOrder, ShipOrderFilter, ShipOrderList
 
 app = FastAPI(title="FreightFox API")
 
@@ -41,5 +41,25 @@ async def create_ship_order(order: ShipOrderCreate):
         else:
             raise HTTPException(status_code=500, detail="Failed to create ship order")
             
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/v1/ship-orders", response_model=ShipOrderList)
+async def get_ship_orders(filters: ShipOrderFilter = Depends()):
+    try:
+        db = Database.get_db()
+        if not db:
+            raise HTTPException(status_code=500, detail="Database connection not available")
+            
+        orders, total_count = await Database.get_ship_orders(
+            page_size=filters.page_size,
+            status_filter=filters.status_filter
+        )
+        
+        return ShipOrderList(
+            orders=[ShipOrderResponse(**order) for order in orders],
+            total_count=total_count
+        )
+        
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
