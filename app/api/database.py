@@ -79,7 +79,7 @@ class Database:
             order_data["booked_rate"],
             order_data["product_sku"],
             order_data["product_description"],
-            str(order_data["dispatch_plan"]),
+            json.dumps(order_data["dispatch_plan"]),
             order_data["status"]
         ]]
         
