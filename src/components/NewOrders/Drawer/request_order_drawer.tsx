@@ -11,6 +11,7 @@ import {cn} from "@/lib/utils.ts"
 import {Box16Regular, Scales24Regular} from "@fluentui/react-icons";
 import {DeliveryDetailsDrawer} from "@/components/NewOrders/Drawer/delivery_dets_drawer.tsx";
 import {DispatchDetailsDrawer} from "@/components/NewOrders/Drawer/dispatch_dets_drawer.tsx";
+import {useNavigate} from "react-router-dom";
 
 
 type DispatchEntry = {
@@ -43,6 +44,25 @@ export default function RequestDetailDrawer({
 	                                            dispatchData,
 	                                            rate
                                             }: Props) {
+
+	const navigate = useNavigate();
+
+	const handleAccept = () => {
+		navigate(`/order-detail?company=${encodeURIComponent(buyerName)}&order=new`, {
+			state: {
+				poNumber,
+				productDetails,
+				quantity,
+				pickupAddress,
+				dropAddress,
+				dispatchData,
+				rate,
+			},
+		})
+	}
+
+
+
 	return (
 		<Drawer direction="bottom">
 			<DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
@@ -101,9 +121,11 @@ export default function RequestDetailDrawer({
 						className="w-full"
 						variant="default"
 						size="lg"
+						onClick={handleAccept}
 					>
 						Accept & Continue
 					</Button>
+
 				</div>
 			</DrawerContent>
 		</Drawer>
