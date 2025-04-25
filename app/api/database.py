@@ -39,7 +39,7 @@ class Database:
         if not values:
             return [], 0
         
-        print("Values: ", values)    
+        # print("Values: ", values)    
         orders = []
         for row in values[1:]:  # Skip header row
             if len(row) >= 10:
@@ -120,14 +120,15 @@ class Database:
         ).execute()
         
         values = result.get('values', [])
+        print("Values: ", values)
         if not values:
             return False
-            
+
+        print("Values: ", values)
         # Find the row to update
         row_idx = None
         for idx, row in enumerate(values):
-            if (len(row) >= 11 and 
-                row[0] == ship_order_id and 
+            if (row[0] == ship_order_id and 
                 row[10] == transporter_id):
                 row_idx = idx
                 break
