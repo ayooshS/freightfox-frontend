@@ -123,15 +123,27 @@ Response 200 OK:
     "status": "accepted",
     "message": "Ship Order accepted successfully"
 }
+```
 
-Response 404 Not Found:
+### 5. Place Vehicle
+Place a vehicle for a ship order.
+
+```bash
+POST /v1/vehicle-placements
+
+Request Body:
 {
-    "detail": "Ship Order not found"
+    "ship_order_id": "SO123",
+    "vehicle_number": "MH12AB1234",
+    "capacity": 15,
+    "driver_mobile_number": "98985784475",
+    "driver_name": "Sam",
+    "placement_date": "2025-04-02T12:34:56Z"
 }
 
-Response 500 Internal Server Error:
+Response 201 Created:
 {
-    "detail": "Failed to update ship order status"
+    "message": "Vehicle placement recorded successfully"
 }
 ```
 
