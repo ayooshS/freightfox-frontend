@@ -79,7 +79,7 @@ async def update_ship_order_status(ship_order_id: str, transporter_id: str, acti
             raise HTTPException(status_code=400, detail="Invalid action. Must be 'accept' or 'reject'")
             
         # Get order to verify it exists
-        orders, _ = await Database.get_ship_orders(1, None, transporter_id)
+        orders, _ = await Database.get_ship_orders(page_size=100, status_filter="all", transporter_id=transporter_id)
         order = next((o for o in orders if o["ship_order_id"] == ship_order_id), None)
         print("Ship-Orders:", orders)
         if not order:

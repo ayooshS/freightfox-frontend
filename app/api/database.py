@@ -1,4 +1,3 @@
-
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from typing import Optional
@@ -10,7 +9,7 @@ class Database:
     service = None
     SPREADSHEET_ID = os.getenv('GOOGLE_SHEET_ID')
     RANGE_NAME = 'Sheet1!A:K'  # Adjust range as needed
-    
+
     @classmethod
     async def connect_db(cls):
         # Use service account credentials
@@ -20,13 +19,13 @@ class Database:
         )
         cls.service = build('sheets', 'v4', credentials=credentials)
         return cls.service
-    
+
     @classmethod
     def get_db(cls):
         if not cls.service:
             cls.connect_db()
         return cls.service.spreadsheets()
-    
+
     @classmethod
     async def get_ship_orders(cls, page_size: int, status_filter: Optional[str] = None, transporter_id: Optional[str] = None):
         sheets = cls.get_db()
@@ -38,51 +37,43 @@ class Database:
         values = result.get('values', [])
         if not values:
             return [], 0
-        
+
         # print("Values: ", values)    
         orders = []
         for row in values[1:]:  # Skip header row
-            if len(row) >= 10:
-                # Skip if status filter doesn't match
-                if status_filter and status_filter != "all":
-                    if row[9].lower() != status_filter.lower():
-                        continue
-                
-                # Skip if transporter_id doesn't match
-                if transporter_id:
-                    if len(row) < 11 or row[10] != transporter_id:
-                        continue
-                    
-                order = {
-                    "ship_order_id": row[0],
-                    "transporter_id": row[10] if len(row) >= 11 else transporter_id,
-                    "order_qty": int(row[1]),
-                    "unit_of_measurement": row[2],
-                    "pickup_address": row[3],
-                    "delivery_address": row[4],
-                    "booked_rate": float(row[5]),
-                    "product_sku": row[6],
-                    "product_description": row[7],
-                    "dispatch_plan": json.loads(row[8].replace("'", '"')),
-                    "status": row[9]
-                }
-                
-                # Apply status filtering
-                    
-                # Then apply status filter
-                if status_filter:
-                    if status_filter == "all":
-                        orders.append(order)
-                    elif order["status"].lower() == status_filter.lower():
-                        orders.append(order)
-                else:
-                    orders.append(order)
-                   
+            # Check if row has all required fields
+            if len(row) < 11:
+                continue
+
+            # Skip if transporter_id doesn't match (when provided)
+            if transporter_id and row[10] != transporter_id:
+                continue
+
+            # Skip if status filter doesn't match (when provided)
+            if status_filter and status_filter != "all" and row[9].lower() != status_filter.lower():
+                continue
+
+            order = {
+                "ship_order_id": row[0],
+                "transporter_id": row[10] if len(row) >= 11 else transporter_id,
+                "order_qty": int(row[1]),
+                "unit_of_measurement": row[2],
+                "pickup_address": row[3],
+                "delivery_address": row[4],
+                "booked_rate": float(row[5]),
+                "product_sku": row[6],
+                "product_description": row[7],
+                "dispatch_plan": json.loads(row[8].replace("'", '"')),
+                "status": row[9]
+            }
+
+            orders.append(order)
+
         total_count = len(orders)
         # Apply pagination
         start_idx = 0
         end_idx = min(page_size, total_count)
-        
+
         return orders[start_idx:end_idx], total_count
 
     @classmethod
@@ -101,7 +92,7 @@ class Database:
             order_data["status"],
             order_data["transporter_id"]
         ]]
-        
+
         body = {'values': values}
         result = sheets.values().append(
             spreadsheetId=cls.SPREADSHEET_ID,
@@ -118,7 +109,7 @@ class Database:
             spreadsheetId=cls.SPREADSHEET_ID,
             range=cls.RANGE_NAME
         ).execute()
-        
+
         values = result.get('values', [])
         print("Values: ", values)
         if not values:
@@ -132,14 +123,14 @@ class Database:
                 row[10] == transporter_id):
                 row_idx = idx
                 break
-                
+
         if row_idx is None:
             return False
-            
+
         # Update the status
         range_name = f'Sheet1!J{row_idx + 1}'
         body = {'values': [[new_status]]}
-        
+
         try:
             sheets.values().update(
                 spreadsheetId=cls.SPREADSHEET_ID,
