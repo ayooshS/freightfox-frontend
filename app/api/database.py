@@ -195,3 +195,52 @@ class Database:
             return True, "Vehicle placement recorded successfully"
         except Exception as e:
             return False, str(e)
+
+    @classmethod
+    async def update_vehicle_placement(cls, ship_order_id: str, vehicle_number: str, placement_data: dict):
+        sheets = cls.get_db()
+
+        # First find the vehicle placement record
+        result = sheets.values().get(
+            spreadsheetId=cls.SPREADSHEET_ID,
+            range='VehiclePlacements!A:H'
+        ).execute()
+
+        values = result.get('values', [])
+        if not values:
+            return False, "No vehicle placements found"
+
+        # Find the row to update
+        row_idx = None
+        for idx, row in enumerate(values):
+            if len(row) >= 3 and row[0] == ship_order_id and row[2] == vehicle_number:
+                row_idx = idx
+                break
+
+        if row_idx is None:
+            return False, "Vehicle placement not found"
+
+        # Update the vehicle placement
+        update_range = f'VehiclePlacements!A{row_idx + 1}:H{row_idx + 1}'
+        update_values = [[
+            placement_data["ship_order_id"],
+            placement_data["transporter_id"],
+            placement_data["vehicle_number"],
+            placement_data["capacity"],
+            placement_data["driver_name"],
+            placement_data["driver_mobile_number"],
+            placement_data["placement_date"].isoformat(),
+            "updated"
+        ]]
+
+        try:
+            body = {'values': update_values}
+            sheets.values().update(
+                spreadsheetId=cls.SPREADSHEET_ID,
+                range=update_range,
+                valueInputOption='RAW',
+                body=body
+            ).execute()
+            return True, "Vehicle placement updated successfully"
+        except Exception as e:
+            return False, str(e)
