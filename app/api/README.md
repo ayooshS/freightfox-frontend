@@ -134,6 +134,7 @@ POST /v1/vehicle-placements
 Request Body:
 {
     "ship_order_id": "SO123",
+    "transporter_id": "T123",
     "vehicle_number": "MH12AB1234",
     "capacity": 15,
     "driver_mobile_number": "98985784475",
@@ -143,6 +144,14 @@ Request Body:
 
 Response 201 Created:
 {
+    "ship_order_id": "SO123",
+    "transporter_id": "T123",
+    "vehicle_number": "MH12AB1234",
+    "capacity": 15,
+    "driver_mobile_number": "98985784475",
+    "driver_name": "Sam",
+    "placement_date": "2025-04-02T12:34:56Z",
+    "status": "placed",
     "message": "Vehicle placement recorded successfully"
 }
 ```

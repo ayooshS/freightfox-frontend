@@ -172,9 +172,10 @@ class Database:
             return False, "Ship order not found"
 
         # Add vehicle placement to a new sheet
-        placement_range = 'VehiclePlacements!A:G'  # New sheet for vehicle placements
+        placement_range = 'VehiclePlacements!A:H'  # New sheet for vehicle placements
         placement_values = [[
             placement_data["ship_order_id"],
+            placement_data["transporter_id"],
             placement_data["vehicle_number"],
             placement_data["capacity"],
             placement_data["driver_name"],

@@ -104,7 +104,7 @@ async def update_ship_order_status(ship_order_id: str, transporter_id: str, acti
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/v1/vehicle-placements", status_code=201)
+@app.post("/v1/vehicle-placements", status_code=201, response_model=VehiclePlacementResponse)
 async def place_vehicle(placement: VehiclePlacementRequest):
     try:
         db = Database.get_db()
@@ -118,7 +118,11 @@ async def place_vehicle(placement: VehiclePlacementRequest):
                 raise HTTPException(status_code=404, detail=message)
             raise HTTPException(status_code=400, detail=message)
 
-        return {"message": message}
+        return VehiclePlacementResponse(
+            **placement.model_dump(),
+            status="placed",
+            message=message
+        )
 
     except HTTPException as he:
         raise he

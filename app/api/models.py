@@ -47,8 +47,20 @@ class ShipOrderList(BaseModel):
 
 class VehiclePlacementRequest(BaseModel):
     ship_order_id: str
+    transporter_id: str
     vehicle_number: str
     capacity: int
     driver_mobile_number: str
     driver_name: str
     placement_date: datetime
+
+class VehiclePlacementResponse(BaseModel):
+    ship_order_id: str
+    transporter_id: str
+    vehicle_number: str
+    capacity: int
+    driver_mobile_number: str
+    driver_name: str
+    placement_date: datetime
+    status: str
+    message: str
