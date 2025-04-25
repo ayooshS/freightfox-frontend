@@ -106,6 +106,35 @@ async def update_ship_order_status(ship_order_id: str, transporter_id: str, acti
 
 @app.post("/v1/vehicle-placements", status_code=201, response_model=VehiclePlacementResponse)
 async def place_vehicle(placement: VehiclePlacementRequest):
+
+@app.put("/v1/vehicle-placements/{ship_order_id}/{vehicle_number}", response_model=VehiclePlacementResponse)
+async def update_vehicle_placement(
+    ship_order_id: str,
+    vehicle_number: str,
+    placement: VehiclePlacementRequest
+):
+    try:
+        db = Database.get_db()
+        if not db:
+            raise HTTPException(status_code=500, detail="Database connection not available")
+
+        success, message = await Database.update_vehicle_placement(ship_order_id, vehicle_number, placement.model_dump())
+
+        if not success:
+            if "not found" in message.lower():
+                raise HTTPException(status_code=404, detail=message)
+            raise HTTPException(status_code=400, detail=message)
+
+        return VehiclePlacementResponse(
+            **placement.model_dump(),
+            status="updated",
+            message=message
+        )
+
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     try:
         db = Database.get_db()
         if not db:

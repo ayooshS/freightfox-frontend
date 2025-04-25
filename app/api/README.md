@@ -156,6 +156,41 @@ Response 201 Created:
 }
 ```
 
+### 6. Update Vehicle Placement
+Update an existing vehicle placement for a ship order.
+
+```bash
+PUT /v1/vehicle-placements/{ship_order_id}/{vehicle_number}
+
+Path Parameters:
+- ship_order_id: ID of the ship order
+- vehicle_number: Vehicle registration number
+
+Request Body:
+{
+    "ship_order_id": "SO123",
+    "transporter_id": "T123",
+    "vehicle_number": "MH12AB1234",
+    "capacity": 15,
+    "driver_mobile_number": "98985784475",
+    "driver_name": "Sam",
+    "placement_date": "2025-04-02T12:34:56Z"
+}
+
+Response 200 OK:
+{
+    "ship_order_id": "SO123",
+    "transporter_id": "T123",
+    "vehicle_number": "MH12AB1234",
+    "capacity": 15,
+    "driver_mobile_number": "98985784475",
+    "driver_name": "Sam",
+    "placement_date": "2025-04-02T12:34:56Z",
+    "status": "updated",
+    "message": "Vehicle placement updated successfully"
+}
+```
+
 ## Error Responses
 
 ```json
