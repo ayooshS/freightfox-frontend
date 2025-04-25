@@ -244,3 +244,46 @@ class Database:
             return True, "Vehicle placement updated successfully"
         except Exception as e:
             return False, str(e)
+
+    @classmethod
+    async def get_vehicle_placements(cls, page_size: int, transporter_id: Optional[str] = None, ship_order_id: Optional[str] = None):
+        sheets = cls.get_db()
+        result = sheets.values().get(
+            spreadsheetId=cls.SPREADSHEET_ID,
+            range='VehiclePlacements!A:H'
+        ).execute()
+
+        values = result.get('values', [])
+        if not values:
+            return [], 0
+
+        placements = []
+        for row in values[1:]:  # Skip header row
+            if len(row) < 8:  # Make sure row has all required fields
+                continue
+
+            # Skip if filters don't match
+            if transporter_id and row[1] != transporter_id:
+                continue
+            if ship_order_id and row[0] != ship_order_id:
+                continue
+
+            placement = {
+                "ship_order_id": row[0],
+                "transporter_id": row[1],
+                "vehicle_number": row[2],
+                "capacity": int(row[3]),
+                "driver_name": row[4],
+                "driver_mobile_number": row[5],
+                "placement_date": row[6],
+                "status": row[7],
+                "message": "Vehicle placement retrieved successfully"
+            }
+            placements.append(placement)
+
+        total_count = len(placements)
+        # Apply pagination
+        start_idx = 0
+        end_idx = min(page_size, total_count)
+
+        return placements[start_idx:end_idx], total_count

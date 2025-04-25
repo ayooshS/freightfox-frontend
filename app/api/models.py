@@ -64,3 +64,7 @@ class VehiclePlacementResponse(BaseModel):
     placement_date: datetime
     status: str
     message: str
+
+class VehiclePlacementList(BaseModel):
+    placements: List[VehiclePlacementResponse]
+    total_count: int

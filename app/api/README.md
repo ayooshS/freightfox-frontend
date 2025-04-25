@@ -191,6 +191,36 @@ Response 200 OK:
 }
 ```
 
+### 7. Get Vehicle Placements
+Retrieve a list of vehicle placements with optional filtering.
+
+```bash
+GET /v1/vehicle-placements?page_size=10&transporter_id=T123&ship_order_id=SO123
+
+Query Parameters:
+- page_size: Number of records per page (default: 10)
+- transporter_id: Filter by transporter ID (optional)
+- ship_order_id: Filter by ship order ID (optional)
+
+Response 200 OK:
+{
+    "placements": [
+        {
+            "ship_order_id": "SO123",
+            "transporter_id": "T123",
+            "vehicle_number": "MH12AB1234",
+            "capacity": 15,
+            "driver_mobile_number": "98985784475",
+            "driver_name": "Sam",
+            "placement_date": "2025-04-02T12:34:56Z",
+            "status": "placed",
+            "message": "Vehicle placement retrieved successfully"
+        }
+    ],
+    "total_count": 1
+}
+```
+
 ## Error Responses
 
 ```json

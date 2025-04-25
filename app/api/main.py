@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from .database import Database
-from .models import ShipOrderCreate, ShipOrderResponse, ShipOrder, ShipOrderFilter, ShipOrderList, VehiclePlacementRequest, VehiclePlacementResponse
+from .models import ShipOrderCreate, ShipOrderResponse, ShipOrder, ShipOrderFilter, ShipOrderList, VehiclePlacementRequest, VehiclePlacementResponse, VehiclePlacementList
 from typing import Optional
 
 app = FastAPI(title="FreightFox API")
@@ -156,5 +156,29 @@ async def update_vehicle_placement(
 
     except HTTPException as he:
         raise he
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/v1/vehicle-placements", response_model=VehiclePlacementList)
+async def get_vehicle_placements(
+    page_size: int = 10,
+    transporter_id: Optional[str] = None,
+    ship_order_id: Optional[str] = None
+):
+    try:
+        db = Database.get_db()
+        if not db:
+            raise HTTPException(status_code=500, detail="Database connection not available")
+
+        placements, total_count = await Database.get_vehicle_placements(
+            page_size=page_size,
+            transporter_id=transporter_id,
+            ship_order_id=ship_order_id
+        )
+
+        return VehiclePlacementList(
+            placements=[VehiclePlacementResponse(**placement) for placement in placements],
+            total_count=total_count
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
