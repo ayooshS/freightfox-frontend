@@ -9,7 +9,7 @@ from ast import literal_eval
 class Database:
     service = None
     SPREADSHEET_ID = os.getenv('GOOGLE_SHEET_ID')
-    RANGE_NAME = 'Sheet1!A:J'  # Adjust range as needed
+    RANGE_NAME = 'Sheet1!A:K'  # Adjust range as needed
     
     @classmethod
     async def connect_db(cls):
