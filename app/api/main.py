@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from .database import Database
-from .models import ShipOrderCreate, ShipOrderResponse, ShipOrder, ShipOrderFilter, ShipOrderList, VehiclePlacementRequest
+from .models import ShipOrderCreate, ShipOrderResponse, ShipOrder, ShipOrderFilter, ShipOrderList, VehiclePlacementRequest, VehiclePlacementResponse
 from typing import Optional
 
 app = FastAPI(title="FreightFox API")
