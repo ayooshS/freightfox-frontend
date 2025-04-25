@@ -141,3 +141,56 @@ class Database:
             return True
         except Exception:
             return False
+
+    @classmethod
+    async def close_db(cls):
+        if cls.service:
+            cls.service.close()
+
+    @classmethod
+    async def place_vehicle(cls, placement_data: dict):
+        sheets = cls.get_db()
+
+        # First verify if ship order exists
+        result = sheets.values().get(
+            spreadsheetId=cls.SPREADSHEET_ID,
+            range=cls.RANGE_NAME
+        ).execute()
+
+        values = result.get('values', [])
+        if not values:
+            return False, "Database is empty"
+
+        # Check if ship order exists
+        ship_order_exists = False
+        for row in values[1:]:  # Skip header
+            if row[0] == placement_data["ship_order_id"]:
+                ship_order_exists = True
+                break
+
+        if not ship_order_exists:
+            return False, "Ship order not found"
+
+        # Add vehicle placement to a new sheet
+        placement_range = 'VehiclePlacements!A:G'  # New sheet for vehicle placements
+        placement_values = [[
+            placement_data["ship_order_id"],
+            placement_data["vehicle_number"],
+            placement_data["capacity"],
+            placement_data["driver_name"],
+            placement_data["driver_mobile_number"],
+            placement_data["placement_date"].isoformat(),
+            "placed"  # Initial status
+        ]]
+
+        try:
+            body = {'values': placement_values}
+            sheets.values().append(
+                spreadsheetId=cls.SPREADSHEET_ID,
+                range=placement_range,
+                valueInputOption='RAW',
+                body=body
+            ).execute()
+            return True, "Vehicle placement recorded successfully"
+        except Exception as e:
+            return False, str(e)

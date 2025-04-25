@@ -44,3 +44,11 @@ class ShipOrderFilter(BaseModel):
 class ShipOrderList(BaseModel):
     orders: List[ShipOrderResponse]
     total_count: int
+
+class VehiclePlacementRequest(BaseModel):
+    ship_order_id: str
+    vehicle_number: str
+    capacity: int
+    driver_mobile_number: str
+    driver_name: str
+    placement_date: datetime
