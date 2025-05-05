@@ -53,6 +53,9 @@ class VehiclePlacementRequest(BaseModel):
     driver_mobile_number: str
     driver_name: str
     placement_date: datetime
+    eway_bill_number: str
+    invoice_number: str
+    lorry_receipt_number: str
 
 class VehiclePlacementResponse(BaseModel):
     ship_order_id: str

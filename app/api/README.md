@@ -1,4 +1,3 @@
-
 # FreightFox API Documentation
 
 ## Base URL
@@ -139,7 +138,10 @@ Request Body:
     "capacity": 15,
     "driver_mobile_number": "98985784475",
     "driver_name": "Sam",
-    "placement_date": "2025-04-02T12:34:56Z"
+    "placement_date": "2025-04-02T12:34:56Z",
+    "eway_bill_number": "EWB123456",
+    "invoice_number": "INV987654",
+    "lorry_receipt_number": "LR456789"
 }
 
 Response 201 Created:
@@ -152,7 +154,10 @@ Response 201 Created:
     "driver_name": "Sam",
     "placement_date": "2025-04-02T12:34:56Z",
     "status": "placed",
-    "message": "Vehicle placement recorded successfully"
+    "message": "Vehicle placement recorded successfully",
+    "eway_bill_number": "EWB123456",
+    "invoice_number": "INV987654",
+    "lorry_receipt_number": "LR456789"
 }
 ```
 
@@ -174,7 +179,10 @@ Request Body:
     "capacity": 15,
     "driver_mobile_number": "98985784475",
     "driver_name": "Sam",
-    "placement_date": "2025-04-02T12:34:56Z"
+    "placement_date": "2025-04-02T12:34:56Z",
+    "eway_bill_number": "EWB123456",
+    "invoice_number": "INV987654",
+    "lorry_receipt_number": "LR456789"
 }
 
 Response 200 OK:
@@ -187,7 +195,10 @@ Response 200 OK:
     "driver_name": "Sam",
     "placement_date": "2025-04-02T12:34:56Z",
     "status": "updated",
-    "message": "Vehicle placement updated successfully"
+    "message": "Vehicle placement updated successfully",
+    "eway_bill_number": "EWB123456",
+    "invoice_number": "INV987654",
+    "lorry_receipt_number": "LR456789"
 }
 ```
 
@@ -214,7 +225,10 @@ Response 200 OK:
             "driver_name": "Sam",
             "placement_date": "2025-04-02T12:34:56Z",
             "status": "placed",
-            "message": "Vehicle placement retrieved successfully"
+            "message": "Vehicle placement retrieved successfully",
+            "eway_bill_number": "EWB123456",
+            "invoice_number": "INV987654",
+            "lorry_receipt_number": "LR456789"
         }
     ],
     "total_count": 1

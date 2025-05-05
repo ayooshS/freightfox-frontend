@@ -172,7 +172,7 @@ class Database:
             return False, "Ship order not found"
 
         # Add vehicle placement to a new sheet
-        placement_range = 'VehiclePlacements!A:H'  # New sheet for vehicle placements
+        placement_range = 'VehiclePlacements!A:K'  # Extended range for new fields
         placement_values = [[
             placement_data["ship_order_id"],
             placement_data["transporter_id"],
@@ -181,7 +181,10 @@ class Database:
             placement_data["driver_name"],
             placement_data["driver_mobile_number"],
             placement_data["placement_date"].isoformat(),
-            "placed"  # Initial status
+            "placed",  # Initial status
+            placement_data["eway_bill_number"],
+            placement_data["invoice_number"],
+            placement_data["lorry_receipt_number"]
         ]]
 
         try:
@@ -221,7 +224,7 @@ class Database:
             return False, "Vehicle placement not found"
 
         # Update the vehicle placement
-        update_range = f'VehiclePlacements!A{row_idx + 1}:H{row_idx + 1}'
+        update_range = f'VehiclePlacements!A{row_idx + 1}:K{row_idx + 1}'
         update_values = [[
             placement_data["ship_order_id"],
             placement_data["transporter_id"],
@@ -230,7 +233,10 @@ class Database:
             placement_data["driver_name"],
             placement_data["driver_mobile_number"],
             placement_data["placement_date"].isoformat(),
-            "updated"
+            "updated",
+            placement_data["eway_bill_number"],
+            placement_data["invoice_number"],
+            placement_data["lorry_receipt_number"]
         ]]
 
         try:
