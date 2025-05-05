@@ -8,7 +8,7 @@ from ast import literal_eval
 class Database:
     service = None
     SPREADSHEET_ID = os.getenv('GOOGLE_SHEET_ID')
-    RANGE_NAME = 'Sheet1!A:K'  # Adjust range as needed
+    RANGE_NAME = 'Sheet1!A:L'  # Extended range to include total_placed_capacity
 
     @classmethod
     async def connect_db(cls):
@@ -62,6 +62,7 @@ class Database:
 
             order = {
                 "ship_order_id": row[0],
+                "total_placed_capacity": int(row[11]) if len(row) >= 12 and row[11] else None,
                 "transporter_id": row[10] if len(row) >= 11 else transporter_id,
                 "order_qty": int(row[1]),
                 "unit_of_measurement": row[2],
