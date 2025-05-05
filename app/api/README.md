@@ -124,40 +124,71 @@ Response 200 OK:
 }
 ```
 
-### 5. Place Vehicle
-Place a vehicle for a ship order.
+### 5. Place Vehicles
+Place multiple vehicles for a ship order.
 
 ```bash
 POST /v1/vehicle-placements
 
 Request Body:
 {
-    "ship_order_id": "SO123",
-    "transporter_id": "T123",
-    "vehicle_number": "MH12AB1234",
-    "capacity": 15,
-    "driver_mobile_number": "98985784475",
-    "driver_name": "Sam",
-    "placement_date": "2025-04-02T12:34:56Z",
-    "eway_bill_number": "EWB123456",
-    "invoice_number": "INV987654",
-    "lorry_receipt_number": "LR456789"
+  "ship_id": "SO123",
+  "vehicles": [
+    {
+      "transporter_id": "T123",
+      "vehicle_number": "MH12AB1234",
+      "capacity": 15,
+      "driver_mobile_number": "98985784475",
+      "driver_name": "Sam",
+      "placement_date": "2025-04-02T12:34:56Z",
+      "eway_bill_number": "EWB123456",
+      "invoice_number": "INV987654",
+      "lorry_receipt_number": "LR456789"
+    },
+    {
+      "transporter_id": "T124",
+      "vehicle_number": "MH14CD5678",
+      "capacity": 10,
+      "driver_mobile_number": "9876543210",
+      "driver_name": "John",
+      "placement_date": "2025-04-03T09:30:00Z",
+      "eway_bill_number": "EWB654321",
+      "invoice_number": "INV123456",
+      "lorry_receipt_number": "LR987654"
+    }
+  ]
 }
 
 Response 201 Created:
 {
-    "ship_order_id": "SO123",
-    "transporter_id": "T123",
-    "vehicle_number": "MH12AB1234",
-    "capacity": 15,
-    "driver_mobile_number": "98985784475",
-    "driver_name": "Sam",
-    "placement_date": "2025-04-02T12:34:56Z",
-    "status": "placed",
-    "message": "Vehicle placement recorded successfully",
-    "eway_bill_number": "EWB123456",
-    "invoice_number": "INV987654",
-    "lorry_receipt_number": "LR456789"
+  "ship_id": "SO123",
+  "vehicles": [
+    {
+      "transporter_id": "T123",
+      "vehicle_number": "MH12AB1234",
+      "capacity": 15,
+      "driver_mobile_number": "98985784475",
+      "driver_name": "Sam",
+      "placement_date": "2025-04-02T12:34:56Z",
+      "status": "placed",
+      "eway_bill_number": "EWB123456",
+      "invoice_number": "INV987654",
+      "lorry_receipt_number": "LR456789"
+    },
+    {
+      "transporter_id": "T124",
+      "vehicle_number": "MH14CD5678",
+      "capacity": 10,
+      "driver_mobile_number": "9876543210",
+      "driver_name": "John",
+      "placement_date": "2025-04-03T09:30:00Z",
+      "status": "placed",
+      "eway_bill_number": "EWB654321",
+      "invoice_number": "INV123456", 
+      "lorry_receipt_number": "LR987654"
+    }
+  ],
+  "message": "Vehicle placements recorded successfully"
 }
 ```
 

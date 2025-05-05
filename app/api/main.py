@@ -111,24 +111,31 @@ async def update_ship_order_status(ship_order_id: str, transporter_id: str, acti
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/v1/vehicle-placements", status_code=201, response_model=VehiclePlacementResponse)
-async def place_vehicle(placement: VehiclePlacementRequest):
-
+async def place_vehicles(placement: VehiclePlacementRequest):
     try:
         db = Database.get_db()
         if not db:
             raise HTTPException(status_code=500, detail="Database connection not available")
 
-        success, message = await Database.place_vehicle(placement.model_dump())
-
-        if not success:
-            if "not found" in message.lower():
-                raise HTTPException(status_code=404, detail=message)
-            raise HTTPException(status_code=400, detail=message)
+        # Place each vehicle
+        placed_vehicles = []
+        for vehicle in placement.vehicles:
+            vehicle_data = {
+                "ship_order_id": placement.ship_id,
+                **vehicle.model_dump()
+            }
+            success, message = await Database.place_vehicle(vehicle_data)
+            
+            if not success:
+                if "not found" in message.lower():
+                    raise HTTPException(status_code=404, detail=f"Ship order {placement.ship_id} not found")
+                raise HTTPException(status_code=400, detail=message)
+            
+            placed_vehicles.append(VehicleResponse(**vehicle.model_dump()))
 
         return VehiclePlacementResponse(
-            **placement.model_dump(),
-            status="placed",
-            message=message
+            ship_id=placement.ship_id,
+            vehicles=placed_vehicles
         )
 
     except HTTPException as he:

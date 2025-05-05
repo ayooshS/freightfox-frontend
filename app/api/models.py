@@ -45,8 +45,7 @@ class ShipOrderList(BaseModel):
     orders: List[ShipOrderResponse]
     total_count: int
 
-class VehiclePlacementRequest(BaseModel):
-    ship_order_id: str
+class VehicleDetails(BaseModel):
     transporter_id: str
     vehicle_number: str
     capacity: int
@@ -57,19 +56,17 @@ class VehiclePlacementRequest(BaseModel):
     invoice_number: str
     lorry_receipt_number: str
 
+class VehicleResponse(VehicleDetails):
+    status: str = "placed"
+
+class VehiclePlacementRequest(BaseModel):
+    ship_id: str
+    vehicles: List[VehicleDetails]
+
 class VehiclePlacementResponse(BaseModel):
-    ship_order_id: str
-    transporter_id: str
-    vehicle_number: str
-    capacity: int
-    driver_mobile_number: str
-    driver_name: str
-    placement_date: datetime
-    status: str
-    message: str
-    eway_bill_number: str
-    invoice_number: str
-    lorry_receipt_number: str
+    ship_id: str
+    vehicles: List[VehicleResponse]
+    message: str = "Vehicle placements recorded successfully"
 
 class VehiclePlacementList(BaseModel):
     placements: List[VehiclePlacementResponse]
