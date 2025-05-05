@@ -138,6 +138,7 @@ async def place_vehicles(placement: VehiclePlacementRequest):
 
         return VehiclePlacementResponse(
             ship_id=placement.ship_id,
+            total_placed_capacity=placement.total_placed_capacity,
             vehicles=placed_vehicles,
             message="Vehicle placements recorded successfully"
         )

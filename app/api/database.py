@@ -164,11 +164,27 @@ class Database:
     async def place_vehicle(cls, placement_data: dict):
         sheets = cls.get_db()
 
-        # First verify if ship order exists
+        # First verify if ship order exists and update total_placed_capacity
         result = sheets.values().get(
             spreadsheetId=cls.SPREADSHEET_ID,
             range=cls.RANGE_NAME
         ).execute()
+
+        # Update total_placed_capacity in Sheet1
+        if "total_placed_capacity" in placement_data:
+            values = result.get('values', [])
+            for idx, row in enumerate(values):
+                if row[0] == placement_data["ship_order_id"]:
+                    # Update total_placed_capacity in column L (12th column)
+                    range_name = f'Sheet1!L{idx + 1}'
+                    body = {'values': [[placement_data["total_placed_capacity"]]]}
+                    sheets.values().update(
+                        spreadsheetId=cls.SPREADSHEET_ID,
+                        range=range_name,
+                        valueInputOption='RAW',
+                        body=body
+                    ).execute()
+                    break
 
         values = result.get('values', [])
         if not values:

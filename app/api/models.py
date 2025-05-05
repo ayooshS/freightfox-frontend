@@ -58,6 +58,7 @@ class VehicleDetails(BaseModel):
 
 class VehiclePlacementRequest(BaseModel):
     ship_id: str
+    total_placed_capacity: int
     vehicles: List[VehicleDetails]
 
 class VehicleResponse(VehicleDetails):
@@ -65,6 +66,7 @@ class VehicleResponse(VehicleDetails):
 
 class VehiclePlacementResponse(BaseModel):
     ship_id: str
+    total_placed_capacity: int
     vehicles: List[VehicleResponse]
     message: str = "Vehicle placements recorded successfully"
 
