@@ -85,7 +85,12 @@ async def update_ship_order_status(ship_order_id: str, transporter_id: str, acti
         if not order:
             raise HTTPException(status_code=404, detail="Ship Order not found")
 
-        new_status = "accepted" if action.lower() == "accept" else "rejected"
+        # Map action to status
+        new_status = action.lower()
+        if action.lower() == "accept":
+            new_status = "accepted"
+        elif action.lower() == "reject":
+            new_status = "rejected"
 
         # Update order status in database
         result = await Database.update_ship_order_status(ship_order_id, transporter_id, new_status)
@@ -95,7 +100,7 @@ async def update_ship_order_status(ship_order_id: str, transporter_id: str, acti
                 "ship_order_id": ship_order_id,
                 "transporter_id": transporter_id,
                 "status": new_status,
-                "message": f"Ship Order {new_status} successfully"
+                "message": "Ship Order status updated successfully"
             }
         else:
             raise HTTPException(status_code=500, detail="Failed to update ship order status")

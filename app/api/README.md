@@ -113,14 +113,14 @@ Path Parameters:
 
 Query Parameters:
 - transporter_id: ID of the transporter
-- action: "accept" or "reject" or "in_progress" or "done"
+- action: "accept", "reject", "in_progress", or "done"
 
 Response 200 OK:
 {
     "ship_order_id": "SO123",
     "transporter_id": "T123",
-    "status": "accepted",
-    "message": "Ship Order accepted successfully"
+    "status": "in_progress",
+    "message": "Ship Order status updated successfully"
 }
 ```
 
