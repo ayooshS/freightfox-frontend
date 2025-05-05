@@ -56,12 +56,12 @@ class VehicleDetails(BaseModel):
     invoice_number: str
     lorry_receipt_number: str
 
-class VehicleResponse(VehicleDetails):
-    status: str = "placed"
-
 class VehiclePlacementRequest(BaseModel):
     ship_id: str
     vehicles: List[VehicleDetails]
+
+class VehicleResponse(VehicleDetails):
+    status: str = "placed"
 
 class VehiclePlacementResponse(BaseModel):
     ship_id: str

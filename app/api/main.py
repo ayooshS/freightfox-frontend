@@ -131,11 +131,15 @@ async def place_vehicles(placement: VehiclePlacementRequest):
                     raise HTTPException(status_code=404, detail=f"Ship order {placement.ship_id} not found")
                 raise HTTPException(status_code=400, detail=message)
             
-            placed_vehicles.append(VehicleResponse(**vehicle.model_dump()))
+            placed_vehicles.append({
+                **vehicle.model_dump(),
+                "status": "placed"
+            })
 
         return VehiclePlacementResponse(
             ship_id=placement.ship_id,
-            vehicles=placed_vehicles
+            vehicles=placed_vehicles,
+            message="Vehicle placements recorded successfully"
         )
 
     except HTTPException as he:
