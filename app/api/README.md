@@ -113,7 +113,7 @@ Path Parameters:
 
 Query Parameters:
 - transporter_id: ID of the transporter
-- action: "accept" or "reject"
+- action: "accept" or "reject" or "in_progress" or "done"
 
 Response 200 OK:
 {
