@@ -74,8 +74,9 @@ async def update_ship_order_status(ship_order_id: str, transporter_id: str, acti
             raise HTTPException(status_code=500, detail="Database connection not available")
 
         # Validate action
-        if action.lower() not in ["accept", "reject"]:
-            raise HTTPException(status_code=400, detail="Invalid action. Must be 'accept' or 'reject'")
+        valid_actions = ["accept", "reject", "in_progress", "done"]
+        if action.lower() not in valid_actions:
+            raise HTTPException(status_code=400, detail=f"Invalid action. Must be one of: {', '.join(valid_actions)}")
 
         # Get order to verify it exists
         orders, _ = await Database.get_ship_orders(page_size=100, status_filter="all", transporter_id=transporter_id)

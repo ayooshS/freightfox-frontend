@@ -50,8 +50,15 @@ class Database:
                 continue
 
             # Skip if status filter doesn't match (when provided)
-            if status_filter and status_filter != "all" and row[9].lower() != status_filter.lower():
-                continue
+            if status_filter and status_filter != "all":
+                current_status = row[9].lower()
+                filter_status = status_filter.lower()
+                if filter_status == "in_progress" and current_status not in ["accepted", "in_progress"]:
+                    continue
+                elif filter_status == "done" and current_status != "done":
+                    continue
+                elif filter_status not in ["in_progress", "done", "all"] and current_status != filter_status:
+                    continue
 
             order = {
                 "ship_order_id": row[0],
@@ -103,7 +110,13 @@ class Database:
         return result
 
     @classmethod
-    async def update_ship_order_status(cls, ship_order_id: str, transporter_id: str, new_status: str):
+    async def update_ship_order_status(cls, ship_order_id: str, transporter_id: str, new_status: str, action: Optional[str] = None):
+        # If action is provided, override the new_status
+        if action:
+            if action == "in_progress":
+                new_status = "in_progress"
+            elif action == "done":
+                new_status = "done"
         sheets = cls.get_db()
         result = sheets.values().get(
             spreadsheetId=cls.SPREADSHEET_ID,
