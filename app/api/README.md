@@ -133,6 +133,7 @@ POST /v1/vehicle-placements
 Request Body:
 {
   "ship_id": "SO123",
+  "total_placed_capacity": 25,
   "vehicles": [
     {
       "transporter_id": "T123",
@@ -162,6 +163,7 @@ Request Body:
 Response 201 Created:
 {
   "ship_id": "SO123",
+  "total_placed_capacity": 25,
   "vehicles": [
     {
       "transporter_id": "T123",
