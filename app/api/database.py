@@ -193,7 +193,7 @@ class Database:
         # Check if ship order exists
         ship_order_exists = False
         for row in values[1:]:  # Skip header
-            if row[0] == placement_data["ship_order_id"]:
+            if row[0] == placement_data["ship_id"]:
                 ship_order_exists = True
                 break
 
@@ -203,7 +203,7 @@ class Database:
         # Add vehicle placement to a new sheet
         placement_range = 'VehiclePlacements!A:K'  # Extended range for new fields
         placement_values = [[
-            placement_data["ship_order_id"],
+            placement_data["ship_id"],
             placement_data["transporter_id"],
             placement_data["vehicle_number"],
             placement_data["capacity"],
