@@ -121,7 +121,8 @@ async def place_vehicles(placement: VehiclePlacementRequest):
         placed_vehicles = []
         for vehicle in placement.vehicles:
             vehicle_data = {
-                "ship_order_id": placement.ship_id,
+                "ship_id": placement.ship_id,
+                "total_placed_capacity": placement.total_placed_capacity,
                 **vehicle.model_dump()
             }
             success, message = await Database.place_vehicle(vehicle_data)

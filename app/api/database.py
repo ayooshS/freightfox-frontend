@@ -174,7 +174,7 @@ class Database:
         if "total_placed_capacity" in placement_data:
             values = result.get('values', [])
             for idx, row in enumerate(values):
-                if row[0] == placement_data["ship_order_id"]:
+                if row[0] == placement_data["ship_id"]:
                     # Update total_placed_capacity in column L (12th column)
                     range_name = f'Sheet1!L{idx + 1}'
                     body = {'values': [[placement_data["total_placed_capacity"]]]}
