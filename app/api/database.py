@@ -283,6 +283,9 @@ class Database:
                 "driver_mobile_number": row[5],
                 "placement_date": row[6],
                 "status": row[7],
+                "eway_bill_number": row[8],
+                "invoice_number": row[9],
+                "lorry_receipt_number": row[10],
                 "message": "Vehicle placement retrieved successfully"
             }
             placements.append(placement)

@@ -67,6 +67,9 @@ class VehiclePlacementResponse(BaseModel):
     placement_date: datetime
     status: str
     message: str
+    eway_bill_number: str
+    invoice_number: str
+    lorry_receipt_number: str
 
 class VehiclePlacementList(BaseModel):
     placements: List[VehiclePlacementResponse]
