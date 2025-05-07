@@ -293,7 +293,10 @@ class Database:
         if not values:
             return [], 0
 
-        placements = []
+        vehicles = []
+        total_placed_capacity = 0
+        current_ship_id = None
+
         for row in values[1:]:  # Skip header row
             if len(row) < 11:  # Make sure row has all required fields
                 continue
@@ -304,8 +307,8 @@ class Database:
             if ship_order_id and row[0] != ship_order_id:
                 continue
 
-            placement = {
-                "ship_order_id": row[0],
+            current_ship_id = row[0]
+            vehicle = {
                 "transporter_id": row[1],
                 "vehicle_number": row[2],
                 "capacity": int(row[3]),
@@ -315,14 +318,18 @@ class Database:
                 "status": row[7],
                 "eway_bill_number": row[8] if len(row) > 8 else None,
                 "invoice_number": row[9] if len(row) > 9 else None,
-                "lorry_receipt_number": row[10] if len(row) > 10 else None,
-                "message": "Vehicle placement retrieved successfully"
+                "lorry_receipt_number": row[10] if len(row) > 10 else None
             }
-            placements.append(placement)
+            total_placed_capacity += int(row[3])
+            vehicles.append(vehicle)
 
-        total_count = len(placements)
         # Apply pagination
         start_idx = 0
-        end_idx = min(page_size, total_count)
+        end_idx = min(page_size, len(vehicles))
+        vehicles = vehicles[start_idx:end_idx]
 
-        return placements[start_idx:end_idx], total_count
+        return {
+            "ship_id": current_ship_id,
+            "total_placed_capacity": total_placed_capacity,
+            "vehicles": vehicles
+        }, len(vehicles)

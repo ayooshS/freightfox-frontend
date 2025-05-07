@@ -196,8 +196,9 @@ async def get_vehicle_placements(
         )
 
         return VehiclePlacementList(
-            placements=[VehiclePlacementGet(**placement) for placement in placements],
-            total_count=total_count
+            ship_id=placements["ship_id"],
+            total_placed_capacity=placements["total_placed_capacity"],
+            vehicles=[VehicleResponse(**vehicle) for vehicle in placements["vehicles"]]
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

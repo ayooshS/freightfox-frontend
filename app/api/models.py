@@ -86,5 +86,7 @@ class VehiclePlacementGet(BaseModel):
     lorry_receipt_number: Optional[str] = None
 
 class VehiclePlacementList(BaseModel):
-    placements: List[VehiclePlacementGet]
-    total_count: int
+    ship_id: str
+    total_placed_capacity: int
+    vehicles: List[VehicleResponse]
+    message: str = "Vehicle placements retrieved successfully"
