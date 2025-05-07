@@ -5,7 +5,7 @@ import {NewOrderPage} from "@/pages/New_order.tsx";
 import AppShell from "@/components/AppShell.tsx";
 import {ActiveTripsPage} from "@/pages/active_trips.tsx";
 import {MyOrdersPage} from "@/pages/my_orders.tsx";
-import OrderDetailPage from "@/pages/schedule_order.tsx";
+import OrderDetailPage from "@/pages/order_detail.tsx";
 
 
 

@@ -16,7 +16,14 @@ export default defineConfig({
         },
     },
     server: {
-        allowedHosts: ['sure-antelope-smooth.ngrok-free.app'], // 👈 add your ngrok domain here
+        proxy: {
+            '/api': {
+                target: 'http://localhost:3000', // JSON Server URL
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api/, ''), // Optional: Remove /api prefix
+            },
+        },
+        allowedHosts: ['sure-antelope-smooth.ngrok-free.app','03f4-106-51-217-224.ngrok-free.app', 'dc8d-106-51-217-224.ngrok-free.app'], // 👈 add your ngrok domain here
     }
 
 })
