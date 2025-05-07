@@ -236,7 +236,7 @@ class Database:
         # First find the vehicle placement record
         result = sheets.values().get(
             spreadsheetId=cls.SPREADSHEET_ID,
-            range='VehiclePlacements!A:H'
+            range='VehiclePlacements!A:K'
         ).execute()
 
         values = result.get('values', [])
@@ -286,7 +286,7 @@ class Database:
         sheets = cls.get_db()
         result = sheets.values().get(
             spreadsheetId=cls.SPREADSHEET_ID,
-            range='VehiclePlacements!A:H'
+            range='VehiclePlacements!A:K'
         ).execute()
 
         values = result.get('values', [])
@@ -295,7 +295,7 @@ class Database:
 
         placements = []
         for row in values[1:]:  # Skip header row
-            if len(row) < 8:  # Make sure row has all required fields
+            if len(row) < 11:  # Make sure row has all required fields
                 continue
 
             # Skip if filters don't match
@@ -313,9 +313,9 @@ class Database:
                 "driver_mobile_number": row[5],
                 "placement_date": row[6],
                 "status": row[7],
-                "eway_bill_number": row[8],
-                "invoice_number": row[9],
-                "lorry_receipt_number": row[10],
+                "eway_bill_number": row[8] if len(row) > 8 else None,
+                "invoice_number": row[9] if len(row) > 9 else None,
+                "lorry_receipt_number": row[10] if len(row) > 10 else None,
                 "message": "Vehicle placement retrieved successfully"
             }
             placements.append(placement)
