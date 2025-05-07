@@ -4,11 +4,16 @@ import { createSlice, PayloadAction, nanoid } from "@reduxjs/toolkit"
 
 
 export type Vehicle = {
-	id: string
-	qty: number
-	vehicleno: string
-	driver: string
-	phone: string
+	id?: string;
+	transporter_id: string;
+	vehicle_number: string;
+	capacity: number;
+	driver_mobile_number: string;
+	driver_name: string;
+	placement_date: string; // ISO date string (e.g., "2025-04-02T12:34:56Z")
+	eway_bill_number: string;
+	invoice_number: string;
+	lorry_receipt_number: string;
 	state: string
 }
 
@@ -17,16 +22,7 @@ type VehicleState = {
 }
 
 const initialState: VehicleState = {
-	vehicles: [
-		{
-			id: nanoid(),
-			qty: 0,
-			vehicleno: "",
-			driver: "",
-			phone: "",
-			state: "new",
-		}
-	],
+	vehicles: [],
 }
 
 const vehicleSlice = createSlice({
@@ -37,10 +33,15 @@ const vehicleSlice = createSlice({
 
 				state.vehicles.push({
 					id: nanoid(),
-					qty: action.payload.qty,
-					vehicleno: action.payload.vehicleno,
-					driver: action.payload.driver,
-					phone: action.payload.phone,
+					transporter_id: action.payload.transporter_id,
+					vehicle_number: action.payload.vehicle_number,
+					capacity: action.payload.capacity,
+					driver_mobile_number: action.payload.driver_mobile_number,
+					driver_name: action.payload.driver_name,
+					placement_date: action.payload.placement_date,
+					eway_bill_number: action.payload.eway_bill_number,
+					invoice_number: action.payload.invoice_number,
+					lorry_receipt_number: action.payload.lorry_receipt_number,
 					state: action.payload.state,
 				})
 
@@ -61,9 +62,12 @@ const vehicleSlice = createSlice({
 
 			}
 		},
+		addmultipleVehicle: (state, action: PayloadAction<Vehicle[]>) => {
+			state.vehicles = action.payload
+		}
 
 	},
 })
 
-export const { addVehicle, removeVehicle, resetVehicles , updateVehicle} = vehicleSlice.actions
+export const { addVehicle, removeVehicle, resetVehicles , updateVehicle, addmultipleVehicle} = vehicleSlice.actions
 export default vehicleSlice.reducer

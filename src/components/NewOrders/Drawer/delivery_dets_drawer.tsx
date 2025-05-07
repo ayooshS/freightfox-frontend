@@ -12,14 +12,14 @@ import { calculateDistance } from "@/lib/calculateDistance"
 
 
 type Props = {
-	pickupAddress: string
-	dropAddress: string
+	pickup_address: string
+	delivery_address: string
 	distance?: string // optional in case you want to vary it
 }
 
 export function DeliveryDetailsDrawer({
-	                                      pickupAddress,
-	                                      dropAddress,
+	                                      pickup_address,
+	                                      delivery_address,
 	                                      distance,
                                       }: Props) {
 
@@ -32,8 +32,8 @@ export function DeliveryDetailsDrawer({
 	useEffect(() => {
 		async function fetchCoords() {
 			try {
-				const pickup = await geocodeAddress(extractCityState(pickupAddress))
-				const drop = await geocodeAddress(extractCityState(dropAddress))
+				const pickup = await geocodeAddress(extractCityState(pickup_address))
+				const drop = await geocodeAddress(extractCityState(delivery_address))
 				setPickupCoords(pickup)
 				setDropCoords(drop)
 
@@ -46,7 +46,7 @@ export function DeliveryDetailsDrawer({
 		}
 
 		fetchCoords()
-	}, [pickupAddress, dropAddress])
+	}, [pickup_address, delivery_address])
 
 
 
@@ -84,7 +84,7 @@ export function DeliveryDetailsDrawer({
 				/>
 				<div>
 					<span className="font-overline-sm-mobile text-text-tertiary">Pickup</span>
-					<p className="font-caption-lg-mobile text-text-primary">{pickupAddress}</p>
+					<p className="font-caption-lg-mobile text-text-primary">{pickup_address}</p>
 				</div>
 			</div>
 
@@ -96,7 +96,7 @@ export function DeliveryDetailsDrawer({
 				/>
 				<div>
 					<span className="font-overline-sm-mobile text-text-tertiary">Drop</span>
-					<p className="font-caption-lg-mobile text-text-primary">{dropAddress}</p>
+					<p className="font-caption-lg-mobile text-text-primary">{delivery_address}</p>
 				</div>
 			</div>
 		</div>

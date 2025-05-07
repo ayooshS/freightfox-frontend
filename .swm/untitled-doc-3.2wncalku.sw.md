@@ -16,25 +16,25 @@ import { Separator } from "@/components/ui/separator.tsx"
 import { PickupDropInfo } from "@/components/NewOrders/pickup_drop_info.tsx"
 
 type RequestCardProps = {
-    poNumber: string
+    ship_order_id: string
     material: string
-    productName: string
-    quantity: string
-    rate: string
-    pickupAddress: string
-    dropAddress: string
+    product_sku: string
+    order_qty: string
+    booked_rate: string
+    pickup_address: string
+    delivery_address: string
     onReject: () => void
     onConfirm: () => void
 }
 
 export default function RequestCard({
-                                        poNumber,
+                                        ship_order_id,
                                         material,
-                                        productName,
-                                        quantity,
-                                        rate,
-                                        pickupAddress,
-                                        dropAddress,
+                                        product_sku,
+                                        order_qty,
+                                        booked_rate,
+                                        pickup_address,
+                                        delivery_address,
                                         onReject,
                                         onConfirm,
                                     }: RequestCardProps) {
@@ -45,11 +45,11 @@ export default function RequestCard({
                 <div className="flex justify-between items-center w-full">
                     <div className="flex items-center gap-2">
             <span className="font-overline-sm-mobile text-text-tertiary">
-              PO / {poNumber}
+              Ship ID: {ship_order_id}
             </span>
                         <Badge variant="default" text={material} />
                     </div>
-                    <MoreSelection onReject={onReject} poNumber={poNumber} dropAddress={dropAddress} />
+                    <MoreSelection onReject={onReject} ship_order_id={ship_order_id} delivery_address={delivery_address} />
                 </div>
 
                 <Separator
@@ -61,17 +61,17 @@ export default function RequestCard({
             {/* Title + Quantity */}
             <div className="flex justify-between items-center">
                 <p className="font-body-lg-mobile text-text-primary w-[45%] line-clamp-2 break-words">
-                    {productName}
+                    {product_sku}
                 </p>
                 <div className="text-right">
-                    <p className="font-body-lg-mobile text-text-primary">{quantity}MT</p>
+                    <p className="font-body-lg-mobile text-text-primary">{order_qty}MT</p>
                     <p className="font-caption-lg-mobile text-text-secondary pt-xs-mobile">
-                        @ ₹{rate}/MT
+                        @ ₹{booked_rate}/MT
                     </p>
                 </div>
             </div>
 
-            <PickupDropInfo pickupAddress={pickupAddress} dropAddress={dropAddress} />
+            <PickupDropInfo pickup_address={pickup_address} delivery_address={delivery_address} />
 
             {/* CTA */}
             <Button variant="default" size="default" className="w-full mt-2" onClick={onConfirm}>

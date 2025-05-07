@@ -39,7 +39,7 @@ flowchart TD
     A["WhatsApp Link"] --> B["Sign-in Page"]
     B --> C["New Orders"]
     E["My Orders"] --> F["Statuses of Order"]
-    F ---> H["Order Detail Page (for selected PO)"]
+    F ---> H["Order Detail Page (for selected SO)"]
     C --> G["Request Orders Card: Accept / Reject"]
     G --> H
     G -. "Creates order for transporter<br>Fulfilled Qty = 0MT" .-> E
@@ -49,7 +49,7 @@ flowchart TD
     K --> D["Active Trips"]
     K -. "Updates order status<br>Fulfilled Qty = X MT" .-> E
     H -.-> L["View Orders"]
-    L -.-> M["PO / DELIVERY / DISPATCH PLAN Details"]
+    L -.-> M["Ship ID: DELIVERY / DISPATCH PLAN Details"]
     D --> N["Status of All Shipments"]
     N --> R["Shipment Detail\n(map, statuses)"]
     R -- can go back to order detail page --> H
