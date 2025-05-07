@@ -71,6 +71,20 @@ class VehiclePlacementResponse(BaseModel):
     vehicles: List[VehicleResponse]
     message: str = "Vehicle placements recorded successfully"
 
+class VehiclePlacementGet(BaseModel):
+    ship_order_id: str
+    transporter_id: str
+    vehicle_number: str
+    capacity: int
+    driver_mobile_number: str
+    driver_name: str
+    placement_date: str
+    status: str
+    message: str
+    eway_bill_number: Optional[str] = None
+    invoice_number: Optional[str] = None
+    lorry_receipt_number: Optional[str] = None
+
 class VehiclePlacementList(BaseModel):
-    placements: List[VehiclePlacementResponse]
+    placements: List[VehiclePlacementGet]
     total_count: int

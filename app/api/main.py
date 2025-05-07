@@ -196,7 +196,7 @@ async def get_vehicle_placements(
         )
 
         return VehiclePlacementList(
-            placements=[VehiclePlacementResponse(**placement) for placement in placements],
+            placements=[VehiclePlacementGet(**placement) for placement in placements],
             total_count=total_count
         )
     except Exception as e:
