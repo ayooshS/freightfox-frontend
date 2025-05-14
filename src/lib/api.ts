@@ -2,20 +2,15 @@
 import axios from 'axios'
 import {Vehicle} from "@/store/slice/vehicleSlice.ts";
 
+
 type shipOrderObjType = {
 	ship_id: string
 	total_placed_capacity: number
 	vehicles: Vehicle[]
 }
 
-type getVehiclePlacementsType = {
-	transporter_id: string
-	ship_order_id: string
-	page_size?: number
-}
 
-const BASE_URL =
-	'https://7bf5a057-7a03-49d8-8426-14d6bcbfec9d-00-36g3647l70hve.pike.replit.dev:5000'
+const BASE_URL = process.env.BASE_TRANS_URL
 
 export async function fetchOrders(transporterID: string) {
 	const response = await axios.get(
@@ -99,6 +94,26 @@ export async function getVehiclePlacements(
 	// 	return []
 	// }
 }
+
+export async function createShipOrder(payload: {
+	ship_order_id: string
+	transporter_id: string
+	order_qty: number
+	unit_of_measurement: string
+	pickup_address: string
+	delivery_address: string
+	booked_rate: number
+	product_sku: string
+	product_description: string
+}) {
+	try {
+		const response = await axios.post(`${BASE_URL}/v1/ship-orders`, payload)
+		return { data: response.data, error: null }
+	} catch (err: any) {
+		return { data: null, error: err?.response?.data || "Unexpected error" }
+	}
+}
+
 
 
 

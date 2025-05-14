@@ -98,7 +98,7 @@ export default function OrderDetailPage() {
 	if(!maindisabled){
 		if (totalqty <= parseInt(order_qty)) {
 			disabledPlace = false;
-		}else if(parseInt(order_qty) < totalqty){
+		}else if(totalqty > parseInt(order_qty)){
 			disabledPlace = true;
 		}
 	}

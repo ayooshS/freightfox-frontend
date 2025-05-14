@@ -33,7 +33,9 @@ export function MyOrdersPage() {
             setIsLoading(true)
             const { data, error } = await getAcceptedOrders()
             if (data !== null) {
+                console.log("✅ API response:", data.orders);
                 setOrderlist(data.orders)
+
             } else {
                 console.error(error)
             }
@@ -59,16 +61,20 @@ export function MyOrdersPage() {
                     ))}
 
                 {!isLoading &&
-                    orderlist.map((order, index) => (
-                        <motion.div
-                            key={order.ship_order_id}
-                            initial={{ opacity: 0, y: 36 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.35, delay: index * 0.08 }}
-                        >
-                            <MyOrderCard key={order.ship_order_id} {...order} />
-                        </motion.div>
-                    ))}
+                    orderlist.map((order, index) => {
+                        console.log(`📦 Order at index ${index}:`, order); // <-- Add here
+                        return (
+                            <motion.div
+                                key={order.ship_order_id}
+                                initial={{ opacity: 0, y: 36 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.35, delay: index * 0.08 }}
+                            >
+                                <MyOrderCard key={order.ship_order_id} {...order} />
+                            </motion.div>
+                        )
+                    })}
+
             </div>
         </main>
     )
