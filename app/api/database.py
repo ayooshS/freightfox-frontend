@@ -64,6 +64,8 @@ class Database:
                 "ship_order_id": row[0],
                 "total_placed_capacity": int(row[12]) if len(row) >= 12 and row[12] else None,
                 "transporter_id": row[10] if len(row) >= 11 else transporter_id,
+                "status": row[9],
+                "created_at": row[11] if len(row) >= 12 else None,
                 "order_qty": int(row[1]),
                 "unit_of_measurement": row[2],
                 "pickup_address": row[3],
@@ -71,9 +73,7 @@ class Database:
                 "booked_rate": float(row[5]),
                 "product_sku": row[6],
                 "product_description": row[7],
-                "dispatch_plan": json.loads(row[8].replace("'", '"')),
-                "status": row[9],
-                "created_at": row[11] if len(row) > 11 else None
+                "dispatch_plan": json.loads(row[8].replace("'", '"'))
             }
 
             orders.append(order)

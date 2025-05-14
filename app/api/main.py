@@ -37,7 +37,9 @@ async def create_ship_order(order: ShipOrderCreate):
         result = await Database.insert_ship_order(ship_order.model_dump())
 
         if result:
-            return ShipOrderResponse(**order.model_dump())
+            response_data = order.model_dump()
+            response_data["created_at"] = current_time
+            return ShipOrderResponse(**response_data)
         else:
             raise HTTPException(status_code=500, detail="Failed to create ship order")
 
