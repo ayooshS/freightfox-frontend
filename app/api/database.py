@@ -108,7 +108,7 @@ class Database:
         # Update the counter
         sheets.values().update(
             spreadsheetId=cls.SPREADSHEET_ID,
-            range='counter!B2',
+            range='counter!A2',
             valueInputOption='RAW',
             body={'values': [[next_id]]}
         ).execute()
