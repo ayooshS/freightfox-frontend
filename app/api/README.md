@@ -28,6 +28,8 @@ POST /v1/ship-orders
 Request Body:
 {
     "ship_order_id": "SO123",
+    "fulfilment_order_id": "FO123",
+    "buyer_name": "John Doe",
     "transporter_id": "T123",
     "order_qty": 100,
     "unit_of_measurement": "MT",
@@ -47,6 +49,8 @@ Request Body:
 Response 201 Created:
 {
     "ship_order_id": "SO123",
+    "fulfilment_order_id": "FO123",
+    "buyer_name": "John Doe",
     "transporter_id": "T123",
     "status": "created",
     "created_at": "25-12-2023 14:30:45",

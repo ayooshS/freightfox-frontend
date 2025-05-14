@@ -9,6 +9,8 @@ class DispatchPlanEntry(BaseModel):
 
 class ShipOrderCreate(BaseModel):
     ship_order_id: str
+    fulfilment_order_id: str
+    buyer_name: str
     transporter_id: str
     order_qty: int
     unit_of_measurement: str
@@ -21,6 +23,8 @@ class ShipOrderCreate(BaseModel):
 
 class ShipOrderResponse(BaseModel):
     ship_order_id: str
+    fulfilment_order_id: str
+    buyer_name: str
     total_placed_capacity: Optional[int] = None
     transporter_id: str
     status: str = "created"

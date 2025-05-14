@@ -62,18 +62,20 @@ class Database:
 
             order = {
                 "ship_order_id": row[0],
-                "total_placed_capacity": int(row[12]) if len(row) >= 12 and row[12] else None,
-                "transporter_id": row[10] if len(row) >= 11 else transporter_id,
-                "status": row[9],
-                "created_at": row[11] if len(row) >= 12 else None,
-                "order_qty": int(row[1]),
-                "unit_of_measurement": row[2],
-                "pickup_address": row[3],
-                "delivery_address": row[4],
-                "booked_rate": float(row[5]),
-                "product_sku": row[6],
-                "product_description": row[7],
-                "dispatch_plan": json.loads(row[8].replace("'", '"'))
+                "fulfilment_order_id": row[1],
+                "buyer_name": row[2],
+                "total_placed_capacity": int(row[14]) if len(row) >= 14 and row[14] else None,
+                "transporter_id": row[12] if len(row) >= 13 else transporter_id,
+                "status": row[11],
+                "created_at": row[13] if len(row) >= 14 else None,
+                "order_qty": int(row[3]),
+                "unit_of_measurement": row[4],
+                "pickup_address": row[5],
+                "delivery_address": row[6],
+                "booked_rate": float(row[7]),
+                "product_sku": row[8],
+                "product_description": row[9],
+                "dispatch_plan": json.loads(row[10].replace("'", '"'))
             }
 
             orders.append(order)
@@ -96,6 +98,8 @@ class Database:
         
         values = [[
             order_data["ship_order_id"],
+            order_data["fulfilment_order_id"],
+            order_data["buyer_name"],
             order_data["order_qty"],
             order_data["unit_of_measurement"],
             order_data["pickup_address"],
