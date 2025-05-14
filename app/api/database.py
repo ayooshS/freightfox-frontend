@@ -88,6 +88,34 @@ class Database:
         return orders[start_idx:end_idx], total_count
 
     @classmethod
+    async def get_next_ship_order_id(cls):
+        sheets = cls.get_db()
+        result = sheets.values().get(
+            spreadsheetId=cls.SPREADSHEET_ID,
+            range='counter!A:B'
+        ).execute()
+        
+        values = result.get('values', [])
+        if not values or len(values) < 2:  # If no value exists
+            current_id = "SO/25/0"
+        else:
+            current_id = values[1][1]  # Get the current counter value
+        
+        # Parse and increment the counter
+        prefix, year, num = current_id.split('/')
+        next_id = f"{prefix}/{year}/{int(num) + 1}"
+        
+        # Update the counter
+        sheets.values().update(
+            spreadsheetId=cls.SPREADSHEET_ID,
+            range='counter!B2',
+            valueInputOption='RAW',
+            body={'values': [[next_id]]}
+        ).execute()
+        
+        return next_id
+
+    @classmethod
     async def insert_ship_order(cls, order_data):
         from datetime import datetime
         from pytz import timezone
@@ -95,6 +123,10 @@ class Database:
         sheets = cls.get_db()
         india_tz = timezone('Asia/Kolkata')
         current_time = datetime.now(india_tz).strftime('%d-%m-%Y %H:%M:%S')
+        
+        # Get next ship order ID
+        ship_order_id = await cls.get_next_ship_order_id()
+        order_data["ship_order_id"] = ship_order_id
         
         values = [[
             order_data["ship_order_id"],

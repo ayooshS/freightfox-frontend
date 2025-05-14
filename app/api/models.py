@@ -8,7 +8,6 @@ class DispatchPlanEntry(BaseModel):
     vehicle_capacity: int
 
 class ShipOrderCreate(BaseModel):
-    ship_order_id: str
     fulfilment_order_id: str
     buyer_name: str
     transporter_id: str

@@ -33,14 +33,14 @@ async def create_ship_order(order: ShipOrderCreate):
         if not db:
             raise HTTPException(status_code=500, detail="Database connection not available")
 
-        ship_order = ShipOrder(**order.model_dump())
+        order_data = order.model_dump()
         from datetime import datetime
         from pytz import timezone
 
         india_tz = timezone('Asia/Kolkata')
         current_time = datetime.now(india_tz).strftime('%d-%m-%Y %H:%M:%S')
 
-        result = await Database.insert_ship_order(ship_order.model_dump())
+        result = await Database.insert_ship_order(order_data)
 
         if result:
             response_data = order.model_dump()

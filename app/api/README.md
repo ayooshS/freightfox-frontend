@@ -27,7 +27,6 @@ POST /v1/ship-orders
 
 Request Body:
 {
-    "ship_order_id": "SO123",
     "fulfilment_order_id": "FO123",
     "buyer_name": "John Doe",
     "transporter_id": "T123",
