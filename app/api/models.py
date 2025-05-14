@@ -20,6 +20,28 @@ class ShipOrderCreate(BaseModel):
     product_description: str
     dispatch_plan: List[DispatchPlanEntry]
 
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "fulfilment_order_id": "FO123",
+                "buyer_name": "John Doe",
+                "transporter_id": "T123",
+                "order_qty": 100,
+                "unit_of_measurement": "MT",
+                "pickup_address": "Mumbai Port, Maharashtra",
+                "delivery_address": "Pune Warehouse, Maharashtra",
+                "booked_rate": 5000.0,
+                "product_sku": "STEEL-001",
+                "product_description": "Steel Plates",
+                "dispatch_plan": [
+                    {
+                        "reporting_date": "2024-02-25",
+                        "vehicle_capacity": 20
+                    }
+                ]
+            }
+        }
+
 class ShipOrderResponse(BaseModel):
     ship_order_id: str
     fulfilment_order_id: str
