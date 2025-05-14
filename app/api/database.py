@@ -8,7 +8,7 @@ from ast import literal_eval
 class Database:
     service = None
     SPREADSHEET_ID = os.getenv('GOOGLE_SHEET_ID')
-    RANGE_NAME = 'Sheet1!A:K'  # Extended range to include created_at
+    RANGE_NAME = 'Sheet1!A:M'  # Extended range to include created_at
 
     @classmethod
     async def connect_db(cls):
