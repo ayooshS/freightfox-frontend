@@ -36,16 +36,39 @@ async def create_ship_order(order: ShipOrderCreate):
         order_data = order.model_dump()
         from datetime import datetime
         from pytz import timezone
+        import json
 
         india_tz = timezone('Asia/Kolkata')
         current_time = datetime.now(india_tz).strftime('%d-%m-%Y %H:%M:%S')
 
         result = await Database.insert_ship_order(order_data)
-
+        # print("Result: ", result)
         if result:
-            response_data = order.model_dump()
-            response_data["created_at"] = current_time
-            return ShipOrderResponse(**response_data)
+            # --- Build Response Object ---
+            row = result[0]
+            return ShipOrderResponse(
+                ship_order_id=row[0],
+                fulfilment_order_id=row[1],
+                buyer_name=row[2],
+                transporter_id=row[12],
+                status=row[11],
+                created_at=row[13],
+                order_qty=row[3],
+                unit_of_measurement=row[4],
+                pickup_address=row[5],
+                delivery_address=row[6],
+                booked_rate=row[7],
+                product_sku=row[8],
+                product_description=row[9],
+                dispatch_plan=json.loads(row[10])
+            )
+            
+            # response_data = order.model_dump()
+            # print("response data:",response_data)
+            # response_data["created_at"] = current_time
+            # print("response data:",response_data)
+            # print("ShipOrderResult:", ShipOrderResponse(**response_data))
+            # return ShipOrderResponse(**response_data)
         else:
             raise HTTPException(status_code=500, detail="Failed to create ship order")
 

@@ -99,23 +99,27 @@ class Database:
             values = result.get('values', [])
             print("Counter values from sheet:", values)  # Debug log
             if not values:  # If sheet is empty
-            # Initialize counter sheet with header and first value
-            sheets.values().update(
-                spreadsheetId=cls.SPREADSHEET_ID,
-                range='counter!A1:B2',
-                valueInputOption='RAW',
-                body={'values': [
-                    ['counter_name', 'value'],
-                    ['ship_order_counter', 'SO/25/0']
-                ]}
-            ).execute()
-            current_id = "SO/25/0"
-        else:
-            try:
-                current_id = values[1][1]  # Get the current counter value
-            except (IndexError, KeyError):
-                current_id = "SO/25/0"  # Fallback value
-        
+                # Initialize counter sheet with header and first value
+                sheets.values().update(
+                    spreadsheetId=cls.SPREADSHEET_ID,
+                    range='counter!A1:B2',
+                    valueInputOption='RAW',
+                    body={'values': [
+                        ['counter_name', 'value'],
+                        ['ship_order_counter', 'SO/25/0']
+                    ]}
+                ).execute()
+                current_id = "SO/25/0"
+            else:
+                try:
+                    current_id = values[1][1]  # Get the current counter value
+                except (IndexError, KeyError): current_id = "SO/25/0"  # Fallback value
+        except Exception as e:
+            print(f"Error inserting ship order: {str(e)}")  # Error log
+            raise Exception(f"Failed to insert ship order: {str(e)}")
+        except:
+            print("Unknown error occurred while inserting ship order")
+            raise Exception("Unknown error occurred while inserting ship order")
         # Parse and increment the counter
         prefix, year, num = current_id.split('/')
         next_id = f"{prefix}/{year}/{int(num) + 1}"
@@ -132,14 +136,14 @@ class Database:
 
     @classmethod
     async def insert_ship_order(cls, order_data):
-        try:
-            from datetime import datetime
-            from pytz import timezone
-            
-            sheets = cls.get_db()
-            india_tz = timezone('Asia/Kolkata')
-            current_time = datetime.now(india_tz).strftime('%d-%m-%Y %H:%M:%S')
-            print("Processing order data:", order_data)  # Debug log
+    
+        from datetime import datetime
+        from pytz import timezone
+        
+        sheets = cls.get_db()
+        india_tz = timezone('Asia/Kolkata')
+        current_time = datetime.now(india_tz).strftime('%d-%m-%Y %H:%M:%S')
+        # print("Processing order data:", order_data)  # Debug log
         
         # Get next ship order ID
         ship_order_id = await cls.get_next_ship_order_id()
@@ -165,14 +169,14 @@ class Database:
 
         try:
             body = {'values': values}
-            print("Inserting values:", values)  # Debug log
+            # print("Inserting values:", values)  # Debug log
             result = sheets.values().append(
                 spreadsheetId=cls.SPREADSHEET_ID,
                 range=cls.RANGE_NAME,
                 valueInputOption='RAW',
                 body=body
             ).execute()
-            return result
+            return values
         except Exception as e:
             print(f"Error inserting ship order: {str(e)}")  # Error log
             raise Exception(f"Failed to insert ship order: {str(e)}")
