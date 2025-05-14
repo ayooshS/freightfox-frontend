@@ -140,6 +140,7 @@ class Database:
         # Get next ship order ID
         ship_order_id = await cls.get_next_ship_order_id()
         order_data["ship_order_id"] = ship_order_id
+        order_data["status"] = "created"  # Set default status
         
         values = [[
             order_data["ship_order_id"],
