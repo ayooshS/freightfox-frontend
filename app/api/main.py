@@ -38,6 +38,7 @@ async def create_ship_order(order: ShipOrderCreate):
 
         if result:
             response_data = order.model_dump()
+            # print("Response Data: ", result)
             response_data["created_at"] = current_time
             return ShipOrderResponse(**response_data)
         else:
