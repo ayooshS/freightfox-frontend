@@ -121,6 +121,7 @@ export default function RequestDetailDrawer({
 					<DeliveryDetailsDrawer
 						pickup_address={pickup_address}
 						delivery_address={delivery_address}
+						bgColorClass="bg-surface-secondary"
 					/>
 
 					{/*dispatch plan*/}

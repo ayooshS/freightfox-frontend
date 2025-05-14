@@ -15,12 +15,14 @@ type Props = {
 	pickup_address: string
 	delivery_address: string
 	distance?: string // optional in case you want to vary it
+	bgColorClass?: string
 }
 
 export function DeliveryDetailsDrawer({
 	                                      pickup_address,
 	                                      delivery_address,
 	                                      distance,
+	                                      bgColorClass = "bg-surface-secondary",
                                       }: Props) {
 
 	const [pickupCoords, setPickupCoords] = useState<[number, number] | null>(null)
@@ -52,7 +54,7 @@ export function DeliveryDetailsDrawer({
 
 	return (
 		<div
-			className="bg-surface-secondary rounded-xl-mobile items-stretch px-2 py-2 pt-8 pb-8 flex flex-col gap-xl-mobile">
+			className={`${bgColorClass} rounded-xl-mobile items-stretch px-2 py-2 pt-8 pb-8 flex flex-col gap-xl-mobile`}>
 			<div className="flex flex-col gap-md-mobile">
 				<div className="flex flex-col gap-xs-mobile">
 					<div className="font-body-base-mobile text-text-primary">
