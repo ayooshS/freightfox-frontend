@@ -89,14 +89,16 @@ class Database:
 
     @classmethod
     async def get_next_ship_order_id(cls):
-        sheets = cls.get_db()
-        result = sheets.values().get(
-            spreadsheetId=cls.SPREADSHEET_ID,
-            range='counter!A:B'
-        ).execute()
-        
-        values = result.get('values', [])
-        if not values:  # If sheet is empty
+        try:
+            sheets = cls.get_db()
+            result = sheets.values().get(
+                spreadsheetId=cls.SPREADSHEET_ID,
+                range='counter!A:B'
+            ).execute()
+            
+            values = result.get('values', [])
+            print("Counter values from sheet:", values)  # Debug log
+            if not values:  # If sheet is empty
             # Initialize counter sheet with header and first value
             sheets.values().update(
                 spreadsheetId=cls.SPREADSHEET_ID,
@@ -130,12 +132,14 @@ class Database:
 
     @classmethod
     async def insert_ship_order(cls, order_data):
-        from datetime import datetime
-        from pytz import timezone
-        
-        sheets = cls.get_db()
-        india_tz = timezone('Asia/Kolkata')
-        current_time = datetime.now(india_tz).strftime('%d-%m-%Y %H:%M:%S')
+        try:
+            from datetime import datetime
+            from pytz import timezone
+            
+            sheets = cls.get_db()
+            india_tz = timezone('Asia/Kolkata')
+            current_time = datetime.now(india_tz).strftime('%d-%m-%Y %H:%M:%S')
+            print("Processing order data:", order_data)  # Debug log
         
         # Get next ship order ID
         ship_order_id = await cls.get_next_ship_order_id()
@@ -159,14 +163,22 @@ class Database:
             current_time
         ]]
 
-        body = {'values': values}
-        result = sheets.values().append(
-            spreadsheetId=cls.SPREADSHEET_ID,
-            range=cls.RANGE_NAME,
-            valueInputOption='RAW',
-            body=body
-        ).execute()
-        return result
+        try:
+            body = {'values': values}
+            print("Inserting values:", values)  # Debug log
+            result = sheets.values().append(
+                spreadsheetId=cls.SPREADSHEET_ID,
+                range=cls.RANGE_NAME,
+                valueInputOption='RAW',
+                body=body
+            ).execute()
+            return result
+        except Exception as e:
+            print(f"Error inserting ship order: {str(e)}")  # Error log
+            raise Exception(f"Failed to insert ship order: {str(e)}")
+        except:
+            print("Unknown error occurred while inserting ship order")
+            raise Exception("Unknown error occurred while inserting ship order")
 
     @classmethod
     async def update_ship_order_status(cls, ship_order_id: str, transporter_id: str, new_status: str, action: Optional[str] = None):
