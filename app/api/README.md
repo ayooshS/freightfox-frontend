@@ -49,6 +49,7 @@ Response 201 Created:
     "ship_order_id": "SO123",
     "transporter_id": "T123",
     "status": "created",
+    "created_at": "25-12-2023 14:30:45",
     "order_qty": 100,
     "unit_of_measurement": "MT",
     "pickup_address": "Mumbai Port, Maharashtra",

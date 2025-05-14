@@ -24,6 +24,7 @@ class ShipOrderResponse(BaseModel):
     total_placed_capacity: Optional[int] = None
     transporter_id: str
     status: str = "created"
+    created_at: Optional[str] = None
     order_qty: int
     unit_of_measurement: str
     pickup_address: str

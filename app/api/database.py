@@ -72,7 +72,8 @@ class Database:
                 "product_sku": row[6],
                 "product_description": row[7],
                 "dispatch_plan": json.loads(row[8].replace("'", '"')),
-                "status": row[9]
+                "status": row[9],
+                "created_at": row[11] if len(row) > 11 else None
             }
 
             orders.append(order)
@@ -86,7 +87,13 @@ class Database:
 
     @classmethod
     async def insert_ship_order(cls, order_data):
+        from datetime import datetime
+        from pytz import timezone
+        
         sheets = cls.get_db()
+        india_tz = timezone('Asia/Kolkata')
+        current_time = datetime.now(india_tz).strftime('%d-%m-%Y %H:%M:%S')
+        
         values = [[
             order_data["ship_order_id"],
             order_data["order_qty"],
@@ -98,7 +105,8 @@ class Database:
             order_data["product_description"],
             json.dumps(order_data["dispatch_plan"]),
             order_data["status"],
-            order_data["transporter_id"]
+            order_data["transporter_id"],
+            current_time
         ]]
 
         body = {'values': values}
