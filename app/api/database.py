@@ -8,7 +8,7 @@ from ast import literal_eval
 class Database:
     service = None
     SPREADSHEET_ID = os.getenv('GOOGLE_SHEET_ID')
-    RANGE_NAME = 'Sheet1!A:M'  # Extended range to include created_at
+    RANGE_NAME = 'Sheet1!A:O'  # Extended range to include created_at
 
     @classmethod
     async def connect_db(cls):
@@ -46,12 +46,12 @@ class Database:
                 continue
 
             # Skip if transporter_id doesn't match (when provided)
-            if transporter_id and row[10] != transporter_id:
+            if transporter_id and row[12] != transporter_id:
                 continue
 
             # Skip if status filter doesn't match (when provided)
             if status_filter and status_filter != "all":
-                current_status = row[9].lower()
+                current_status = row[11].lower()
                 filter_status = status_filter.lower()
                 if filter_status == "in_progress" and current_status not in ["accepted", "in_progress"]:
                     continue
@@ -189,7 +189,7 @@ class Database:
             for idx, row in enumerate(values):
                 if row[0] == placement_data["ship_id"]:
                     # Update total_placed_capacity in column M (13th column)
-                    range_name = f'Sheet1!M{idx + 1}'
+                    range_name = f'Sheet1!O{idx + 1}'
                     body = {'values': [[placement_data["total_placed_capacity"]]]}
                     sheets.values().update(
                         spreadsheetId=cls.SPREADSHEET_ID,
