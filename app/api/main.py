@@ -34,11 +34,16 @@ async def create_ship_order(order: ShipOrderCreate):
             raise HTTPException(status_code=500, detail="Database connection not available")
 
         ship_order = ShipOrder(**order.model_dump())
+        from datetime import datetime
+        from pytz import timezone
+
+        india_tz = timezone('Asia/Kolkata')
+        current_time = datetime.now(india_tz).strftime('%d-%m-%Y %H:%M:%S')
+
         result = await Database.insert_ship_order(ship_order.model_dump())
 
         if result:
             response_data = order.model_dump()
-            # print("Response Data: ", result)
             response_data["created_at"] = current_time
             return ShipOrderResponse(**response_data)
         else:
@@ -129,12 +134,12 @@ async def place_vehicles(placement: VehiclePlacementRequest):
                 **vehicle.model_dump()
             }
             success, message = await Database.place_vehicle(vehicle_data)
-            
+
             if not success:
                 if "not found" in message.lower():
                     raise HTTPException(status_code=404, detail=f"Ship order {placement.ship_id} not found")
                 raise HTTPException(status_code=400, detail=message)
-            
+
             placed_vehicles.append({
                 **vehicle.model_dump(),
                 "status": "placed"
