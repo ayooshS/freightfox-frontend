@@ -96,10 +96,23 @@ class Database:
         ).execute()
         
         values = result.get('values', [])
-        if not values or len(values) < 2:  # If no value exists
+        if not values:  # If sheet is empty
+            # Initialize counter sheet with header and first value
+            sheets.values().update(
+                spreadsheetId=cls.SPREADSHEET_ID,
+                range='counter!A1:B2',
+                valueInputOption='RAW',
+                body={'values': [
+                    ['counter_name', 'value'],
+                    ['ship_order_counter', 'SO/25/0']
+                ]}
+            ).execute()
             current_id = "SO/25/0"
         else:
-            current_id = values[1][1]  # Get the current counter value
+            try:
+                current_id = values[1][1]  # Get the current counter value
+            except (IndexError, KeyError):
+                current_id = "SO/25/0"  # Fallback value
         
         # Parse and increment the counter
         prefix, year, num = current_id.split('/')
@@ -108,7 +121,7 @@ class Database:
         # Update the counter
         sheets.values().update(
             spreadsheetId=cls.SPREADSHEET_ID,
-            range='counter!A2',
+            range='counter!B2',
             valueInputOption='RAW',
             body={'values': [[next_id]]}
         ).execute()
