@@ -110,12 +110,10 @@ Response 200 OK:
 Accept or reject a ship order.
 
 ```bash
-PUT /v1/ship-orders/{ship_order_id}/status?transporter_id={transporter_id}&action={action}
-
-Path Parameters:
-- ship_order_id: ID of the ship order
+PUT /v1/ship-orders/status?ship_order_id={ship_order_id}&transporter_id={transporter_id}&action={action}
 
 Query Parameters:
+- ship_order_id: ID of the ship order
 - transporter_id: ID of the transporter
 - action: "accept", "reject", "in_progress", or "done"
 
