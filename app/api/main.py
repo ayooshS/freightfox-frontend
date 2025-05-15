@@ -99,6 +99,7 @@ async def get_ship_orders(filters: ShipOrderFilter = Depends(),transporter_id: O
 
 @app.put("/v1/ship-orders/{ship_order_id}/status")
 async def update_ship_order_status(ship_order_id: str, transporter_id: str, action: str):
+    print(ship_order_id)
     try:
         db = Database.get_db()
         if not db:

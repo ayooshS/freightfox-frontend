@@ -187,6 +187,7 @@ class Database:
     @classmethod
     async def update_ship_order_status(cls, ship_order_id: str, transporter_id: str, new_status: str, action: Optional[str] = None):
         # If action is provided, override the new_status
+        print("ship_order_id:",ship_order_id)
         if action:
             if action == "in_progress":
                 new_status = "in_progress"
