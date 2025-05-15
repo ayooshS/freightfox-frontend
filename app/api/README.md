@@ -134,67 +134,73 @@ POST /v1/vehicle-placements
 
 Request Body:
 {
-  "ship_id": "SO123",
-  "total_placed_capacity": 25,
-  "vehicles": [
-    {
-      "transporter_id": "T123",
-      "transporter_name": "Supreme Road Transport Pvt Ltd",
-      "transporter_identifier": "07AAHCS3919A1ZL",
-      "vehicle_number": "MH12AB1234",
-      "capacity": 15,
-      "driver_mobile_number": "98985784475",
-      "driver_name": "Sam",
-      "placement_date": "2025-04-02T12:34:56Z",
-      "eway_bill_number": "EWB123456",
-      "invoice_number": "INV987654",
-      "lorry_receipt_number": "LR456789"
-    },
-    {
-      "transporter_id": "T124",
-      "vehicle_number": "MH14CD5678",
-      "capacity": 10,
-      "driver_mobile_number": "9876543210",
-      "driver_name": "John",
-      "placement_date": "2025-04-03T09:30:00Z",
-      "eway_bill_number": "EWB654321",
-      "invoice_number": "INV123456",
-      "lorry_receipt_number": "LR987654"
-    }
-  ]
+    "ship_id": "SO/25/10",
+    "total_placed_capacity": 50,
+    "vehicles": [
+        {
+          "transporter_id": "T123",
+          "transporter_name": "Supreme Road Transport Pvt Ltd",
+          "transporter_identifier": "07AAHCS3919A1ZL",
+          "vehicle_number": "MH12AB1234",
+          "capacity": 30,
+          "driver_mobile_number": "98985784475",
+          "driver_name": "Sam",
+          "placement_date": "2025-04-02T12:34:56Z",
+          "eway_bill_number": "EWB123456",
+          "invoice_number": "INV987654",
+          "lorry_receipt_number": "LR456789"
+        },
+        {
+          "transporter_id": "T123",
+          "transporter_name": "Supreme Road Transport Pvt Ltd",
+          "transporter_identifier": "07AAHCS3919A1ZL",
+          "vehicle_number": "MH14CD5678",
+          "capacity": 10,
+          "driver_mobile_number": "9876543210",
+          "driver_name": "John",
+          "placement_date": "2025-04-03T09:30:00Z",
+          "eway_bill_number": "EWB654321",
+          "invoice_number": "INV123456",
+          "lorry_receipt_number": "LR987654"
+        }
+    ]
 }
 
 Response 201 Created:
 {
-  "ship_id": "SO123",
-  "total_placed_capacity": 25,
-  "vehicles": [
-    {
-      "transporter_id": "T123",
-      "vehicle_number": "MH12AB1234",
-      "capacity": 15,
-      "driver_mobile_number": "98985784475",
-      "driver_name": "Sam",
-      "placement_date": "2025-04-02T12:34:56Z",
-      "status": "placed",
-      "eway_bill_number": "EWB123456",
-      "invoice_number": "INV987654",
-      "lorry_receipt_number": "LR456789"
-    },
-    {
-      "transporter_id": "T124",
-      "vehicle_number": "MH14CD5678",
-      "capacity": 10,
-      "driver_mobile_number": "9876543210",
-      "driver_name": "John",
-      "placement_date": "2025-04-03T09:30:00Z",
-      "status": "placed",
-      "eway_bill_number": "EWB654321",
-      "invoice_number": "INV123456", 
-      "lorry_receipt_number": "LR987654"
-    }
-  ],
-  "message": "Vehicle placements recorded successfully"
+    "ship_id": "SO/25/10",
+    "total_placed_capacity": 50,
+    "vehicles": [
+        {
+            "transporter_id": "T123",
+            "transporter_name": "Supreme Road Transport Pvt Ltd",
+            "transporter_identifier": "07AAHCS3919A1ZL",
+            "vehicle_number": "MH12AB1234",
+            "capacity": 30,
+            "driver_mobile_number": "98985784475",
+            "driver_name": "Sam",
+            "placement_date": "2025-04-02T12:34:56Z",
+            "eway_bill_number": "EWB123456",
+            "invoice_number": "INV987654",
+            "lorry_receipt_number": "LR456789",
+            "status": "placed"
+        },
+        {
+            "transporter_id": "T123",
+            "transporter_name": "Supreme Road Transport Pvt Ltd",
+            "transporter_identifier": "07AAHCS3919A1ZL",
+            "vehicle_number": "MH14CD5678",
+            "capacity": 10,
+            "driver_mobile_number": "9876543210",
+            "driver_name": "John",
+            "placement_date": "2025-04-03T09:30:00Z",
+            "eway_bill_number": "EWB654321",
+            "invoice_number": "INV123456",
+            "lorry_receipt_number": "LR987654",
+            "status": "placed"
+        }
+    ],
+    "message": "Vehicle placements recorded successfully"
 }
 ```
 
