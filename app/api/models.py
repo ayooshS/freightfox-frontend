@@ -52,8 +52,6 @@ class ShipOrderList(BaseModel):
 
 class VehicleDetails(BaseModel):
     transporter_id: str
-    transporter_name: str
-    transporter_identifier: Optional[str] = None
     vehicle_number: str
     capacity: int
     driver_mobile_number: str
