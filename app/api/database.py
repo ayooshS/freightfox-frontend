@@ -362,43 +362,6 @@ class Database:
         result = sheets.values().get(
             spreadsheetId=cls.SPREADSHEET_ID,
             range='VehiclePlacements!A:K'
-
-
-    @classmethod
-    async def get_transporters(cls, page_size: int = 10):
-        try:
-            sheets = cls.get_db()
-            result = sheets.values().get(
-                spreadsheetId=cls.SPREADSHEET_ID,
-                range='Transporters!A:C'
-            ).execute()
-
-            values = result.get('values', [])
-            if not values:
-                return [], 0
-
-            transporters = []
-            for row in values[1:]:  # Skip header row
-                if len(row) < 2:  # At least id and name should be present
-                    continue
-                    
-                transporter = {
-                    "transporter_id": row[0],
-                    "transporter_name": row[1],
-                    "transporter_identifier": row[2] if len(row) > 2 else None
-                }
-                transporters.append(transporter)
-
-            total_count = len(transporters)
-            # Apply pagination
-            start_idx = 0
-            end_idx = min(page_size, total_count)
-
-            return transporters[start_idx:end_idx], total_count
-        except Exception as e:
-            print(f"Error getting transporters: {str(e)}")
-            raise Exception(f"Failed to get transporters: {str(e)}")
-
         ).execute()
 
         values = result.get('values', [])
@@ -445,3 +408,38 @@ class Database:
             "total_placed_capacity": total_placed_capacity,
             "vehicles": vehicles
         }, len(vehicles)
+
+    @classmethod
+    async def get_transporters(cls, page_size: int = 10):
+        try:
+            sheets = cls.get_db()
+            result = sheets.values().get(
+                spreadsheetId=cls.SPREADSHEET_ID,
+                range='Transporters!A:C'
+            ).execute()
+
+            values = result.get('values', [])
+            if not values:
+                return [], 0
+
+            transporters = []
+            for row in values[1:]:  # Skip header row
+                if len(row) < 2:  # At least id and name should be present
+                    continue
+
+                transporter = {
+                    "transporter_id": row[0],
+                    "transporter_name": row[1],
+                    "transporter_identifier": row[2] if len(row) > 2 else None
+                }
+                transporters.append(transporter)
+
+            total_count = len(transporters)
+            # Apply pagination
+            start_idx = 0
+            end_idx = min(page_size, total_count)
+
+            return transporters[start_idx:end_idx], total_count
+        except Exception as e:
+            print(f"Error getting transporters: {str(e)}")
+            raise Exception(f"Failed to get transporters: {str(e)}")
