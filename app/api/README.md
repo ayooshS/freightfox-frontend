@@ -284,3 +284,26 @@ Common HTTP Status Codes:
 - 400: Bad Request
 - 404: Not Found
 - 500: Internal Server Error
+
+
+### 8. Get Transporters
+Retrieve a list of transporters with pagination.
+
+```bash
+GET /v1/transporters?page_size=10
+
+Query Parameters:
+- page_size: Number of records per page (default: 10)
+
+Response 200 OK:
+{
+    "transporters": [
+        {
+            "transporter_id": "T101",
+            "transporter_name": "Meteoric Logistics Pvt Ltd",
+            "transporter_identifier": null
+        }
+    ],
+    "total_count": 1
+}
+```

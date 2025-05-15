@@ -234,3 +234,20 @@ async def get_vehicle_placements(
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/v1/transporters", response_model=TransporterList)
+async def get_transporters(page_size: int = 10):
+    try:
+        db = Database.get_db()
+        if not db:
+            raise HTTPException(status_code=500, detail="Database connection not available")
+
+        transporters, total_count = await Database.get_transporters(page_size=page_size)
+        
+        return TransporterList(
+            transporters=[TransporterResponse(**transporter) for transporter in transporters],
+            total_count=total_count
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

@@ -94,3 +94,14 @@ class VehiclePlacementList(BaseModel):
     total_placed_capacity: int
     vehicles: List[VehicleResponse]
     message: str = "Vehicle placements retrieved successfully"
+
+
+
+class TransporterResponse(BaseModel):
+    transporter_id: str
+    transporter_name: str
+    transporter_identifier: Optional[str] = None
+
+class TransporterList(BaseModel):
+    transporters: List[TransporterResponse]
+    total_count: int
