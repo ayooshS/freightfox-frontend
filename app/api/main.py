@@ -97,7 +97,7 @@ async def get_ship_orders(filters: ShipOrderFilter = Depends(),transporter_id: O
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.put("/v1/ship-orders/{ship_order_id}/status")
+@app.put("/v1/ship-orders/status")
 async def update_ship_order_status(ship_order_id: str, transporter_id: str, action: str):
     print(ship_order_id)
     try:
