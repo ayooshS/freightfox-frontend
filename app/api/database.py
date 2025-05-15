@@ -277,7 +277,7 @@ class Database:
             return False, "Ship order not found"
 
         # Add vehicle placement to a new sheet
-        placement_range = 'VehiclePlacements!A:K'  # Extended range for new fields
+        placement_range = 'VehiclePlacements!A:M'  # Extended range for new fields
         placement_values = [[
             placement_data["ship_id"],
             placement_data["transporter_id"],
@@ -289,7 +289,9 @@ class Database:
             "placed",  # Initial status
             placement_data["eway_bill_number"],
             placement_data["invoice_number"],
-            placement_data["lorry_receipt_number"]
+            placement_data["lorry_receipt_number"],
+            placement_data["transporter_name"],
+            placement_data["transporter_identifier"]
         ]]
 
         try:

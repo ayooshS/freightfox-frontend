@@ -139,6 +139,8 @@ Request Body:
   "vehicles": [
     {
       "transporter_id": "T123",
+      "transporter_name": "Supreme Road Transport Pvt Ltd",
+      "transporter_identifier": "07AAHCS3919A1ZL",
       "vehicle_number": "MH12AB1234",
       "capacity": 15,
       "driver_mobile_number": "98985784475",
