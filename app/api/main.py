@@ -54,15 +54,13 @@ async def create_ship_order(order: ShipOrderCreate):
                     "ship_order_id": row[0],
                     "fulfilment_order_id": row[1],
                     "buyer_name": row[2],
-                    "status": "created",
                     "order_qty": int(row[3]),
                     "unit_of_measurement": row[4],
                     "pickup_address": row[5],
                     "delivery_address": row[6],
                     "product_sku": row[8],
                     "product_description": row[9],
-                    "confirm_url": "www.bizongo.com",
-                    "vehicle_number": ""
+                    "confirm_url": "www.bizongo.com"
                 }
             )
             return ShipOrderResponse(
