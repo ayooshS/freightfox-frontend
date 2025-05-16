@@ -191,12 +191,47 @@ async def place_vehicles(placement: VehiclePlacementRequest):
                 "status": "placed"
             })
 
-        return VehiclePlacementResponse(
+        # Prepare response
+        response = VehiclePlacementResponse(
             ship_id=placement.ship_id,
             total_placed_capacity=placement.total_placed_capacity,
             vehicles=placed_vehicles,
             message="Vehicle placements recorded successfully"
         )
+
+        # Send notification
+        try:
+            notification_payload = {
+                "ship_id": placement.ship_id,
+                "total_placed_capacity": placement.total_placed_capacity,
+                "vehicles": [
+                    {
+                        "transporter_id": vehicle.transporter_id,
+                        "transporter_name": vehicle.transporter_name,
+                        "transporter_identifier": vehicle.transporter_identifier,
+                        "vehicle_number": vehicle.vehicle_number,
+                        "capacity": vehicle.capacity,
+                        "driver_mobile_number": vehicle.driver_mobile_number,
+                        "driver_name": vehicle.driver_name,
+                        "placement_date": vehicle.placement_date.isoformat(),
+                        "eway_bill_number": vehicle.eway_bill_number,
+                        "invoice_number": vehicle.invoice_number,
+                        "lorry_receipt_number": vehicle.lorry_receipt_number
+                    }
+                    for vehicle in placement.vehicles
+                ]
+            }
+            
+            await Database.send_notifications(
+                event="freight_fox_vehicle_placement",
+                email_list=["sabarish.r@bizongo.com"],
+                payload=notification_payload
+            )
+        except Exception as e:
+            print(f"Warning: Failed to send notification: {str(e)}")
+            # Continue with response even if notification fails
+            
+        return response
 
     except HTTPException as he:
         raise he
