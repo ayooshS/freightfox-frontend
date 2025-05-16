@@ -483,7 +483,7 @@ class Database:
             notification_data = {
                 "event": event,
                 "to": {
-                    "email": [email_list]
+                    "email": email_list
                 },
                 "type": "single",
                 "payload": payload,
@@ -494,7 +494,7 @@ class Database:
                 "SECRET_TOKEN": str(os.getenv("NOTIFICATION_SECRET")),
                 "Content-Type": "application/json"
             }
-                
+            # print(notification_data)    
             async with aiohttp.ClientSession() as session:
                 async with session.post(url, json=notification_data, headers=headers) as response:
                     if response.status != 200:

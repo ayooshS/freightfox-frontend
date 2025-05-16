@@ -63,11 +63,12 @@ async def create_ship_order(order: ShipOrderCreate):
                 "status": "created"
             }
             
-            await Database.send_notifications(
+            notif_result = await Database.send_notifications(
                 event="freight_fox_notifs-1",
                 email_list=["sabarish.r@bizongo.com"],
                 payload=notification_payload
             )
+            print("Notification Result: ", notif_result)
             return ShipOrderResponse(
                 ship_order_id=row[0],
                 fulfilment_order_id=row[1],
@@ -223,7 +224,7 @@ async def place_vehicles(placement: VehiclePlacementRequest):
             }
             
             await Database.send_notifications(
-                event="freight_fox_vehicle_placement",
+                event="freight_fox_notifs-2",
                 email_list=["sabarish.r@bizongo.com"],
                 payload=notification_payload
             )
