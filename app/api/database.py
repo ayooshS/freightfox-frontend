@@ -471,3 +471,32 @@ class Database:
         except Exception as e:
             print(f"Error getting transporters: {str(e)}")
             raise Exception(f"Failed to get transporters: {str(e)}")
+
+    @classmethod
+    async def send_notifications(cls, event: str, email_list: list[str], payload: dict):
+        try:
+            import aiohttp
+            import json
+
+            url = "https://service.showroom.indopus.in/ns/api/notification-adapter"
+            
+            notification_data = {
+                "event": event,
+                "to": {
+                    "email": email_list
+                },
+                "type": "single",
+                "payload": payload,
+                "userId": "12345"  # Using static userId as per sample
+            }
+
+            async with aiohttp.ClientSession() as session:
+                async with session.post(url, json=notification_data) as response:
+                    if response.status != 200:
+                        error_text = await response.text()
+                        raise Exception(f"Notification service error: {error_text}")
+                    return await response.json()
+
+        except Exception as e:
+            print(f"Error sending notification: {str(e)}")
+            raise Exception(f"Failed to send notification: {str(e)}")

@@ -10,3 +10,5 @@ httpx
 pytest
 pytz
 pytz
+aiohttp
+aiohttp
