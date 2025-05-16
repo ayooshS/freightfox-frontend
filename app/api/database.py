@@ -51,15 +51,20 @@ class Database:
                 continue
 
             # Skip if status filter doesn't match (when provided)
-            if status_filter and status_filter != "all":
-                current_status = row[11].lower()
-                print(row[0])
+            if status_filter and status_filter.lower() != "all":
+                current_status = row[11].lower() if len(row) > 11 else "new"
                 filter_status = status_filter.lower()
-                if filter_status == "in_progress" and current_status not in ["new", "in_progress"]:
+                
+                # Handle different filter cases
+                if filter_status == "in_progress" and current_status not in ["accepted", "in_progress"]:
+                    continue
+                elif filter_status == "new" and current_status != "new":
+                    continue
+                elif filter_status == "accepted" and current_status != "accepted":
                     continue
                 elif filter_status == "done" and current_status != "done":
                     continue
-                elif filter_status not in ["in_progress", "done", "all"] and current_status != filter_status:
+                elif filter_status not in ["in_progress", "new", "accepted", "done", "all"]:
                     continue
 
             order = {
