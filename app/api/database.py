@@ -491,7 +491,7 @@ class Database:
             }
 
             headers = {
-                "SECRET_TOKEN": "NOTIFICATION_SECRET",
+                "SECRET_TOKEN": os.getenv('NOTIFICATION_SECRET'),
                 "Content-Type": "application/json"
             }
 

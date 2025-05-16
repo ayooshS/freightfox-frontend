@@ -51,7 +51,17 @@ async def create_ship_order(order: ShipOrderCreate):
                 event="freight_fox_notifs-1",
                 email_list=["sabarish.r@bizongo.com"],
                 payload={
-                    "ship_order_id": "SO/25/125"
+                    "ship_order_id": "SO/25/125",
+                    "fulfilment_order_id": "PO/25/125",
+                    "buyer_name": "Sabarish",
+                    "status": "created",
+                    "order_qty": 100,
+                    "unit_of_measurement": "MT",
+                    "pickup_address": "Mumbai Port, Maharashtra",
+                    "delivery_address": "Pune Warehouse, Maharashtra",
+                    "product_sku": "STEEL-001",
+                    "product_description": "Steel Plates",
+                    "confirm_url": "www.bizongo.com"
                     # ... rest of the payload fields
                 }
             )
