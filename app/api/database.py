@@ -376,12 +376,15 @@ class Database:
 
             result = sheets.values().get(
                 spreadsheetId=cls.SPREADSHEET_ID,
-                range='VehiclePlacements!A:K'
+                range='VehiclePlacements!A:M'
             ).execute()
 
             values = result.get('values', [])
             if not values:
                 return {"ship_id": None, "total_placed_capacity": 0, "vehicles": []}, 0
+
+            if not any(row[0] == ship_order_id for row in values[1:] if row): # Skip header and check if ship_order_id exists
+                raise Exception(f"Ship order {ship_order_id} not found in vehicle placements")
 
             vehicles = []
             total_placed_capacity = 0
@@ -409,7 +412,9 @@ class Database:
                         "status": row[7],
                         "eway_bill_number": row[8] if len(row) > 8 else None,
                         "invoice_number": row[9] if len(row) > 9 else None,
-                        "lorry_receipt_number": row[10] if len(row) > 10 else None
+                        "lorry_receipt_number": row[10] if len(row) > 10 else None,
+                        "transporter_name": row[11] if len(row) > 11 else None,
+                        "transporter_identifier": row[12] if len(row) > 12 else None
                     }
                     total_placed_capacity += int(row[3])
                     vehicles.append(vehicle)
