@@ -35,6 +35,7 @@ class Database:
         ).execute()
 
         values = result.get('values', [])
+        # print("Values: ",values)
         if not values:
             return [], 0
 
@@ -52,8 +53,9 @@ class Database:
             # Skip if status filter doesn't match (when provided)
             if status_filter and status_filter != "all":
                 current_status = row[11].lower()
+                print(row[0])
                 filter_status = status_filter.lower()
-                if filter_status == "in_progress" and current_status not in ["accepted", "in_progress"]:
+                if filter_status == "in_progress" and current_status not in ["new", "in_progress"]:
                     continue
                 elif filter_status == "done" and current_status != "done":
                     continue
@@ -81,6 +83,7 @@ class Database:
             orders.append(order)
 
         total_count = len(orders)
+        print("Total Count: ", total_count)
         # Apply pagination
         start_idx = 0
         end_idx = min(page_size, total_count)
@@ -148,7 +151,7 @@ class Database:
         # Get next ship order ID
         ship_order_id = await cls.get_next_ship_order_id()
         order_data["ship_order_id"] = ship_order_id
-        order_data["status"] = "created"  # Set default status
+        order_data["status"] = "new"  # Set default status
         
         values = [[
             order_data["ship_order_id"],
