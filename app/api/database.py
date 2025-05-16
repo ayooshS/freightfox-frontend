@@ -369,6 +369,7 @@ class Database:
 
     @classmethod
     async def get_vehicle_placements(cls, page_size: int, transporter_id: Optional[str] = None, ship_order_id: Optional[str] = None):
+        print("Entering get_vehicle_placements")
         try:
             sheets = cls.get_db()
             if not sheets:
@@ -376,7 +377,7 @@ class Database:
 
             result = sheets.values().get(
                 spreadsheetId=cls.SPREADSHEET_ID,
-                range='VehiclePlacements!A:K'
+                range='VehiclePlacements!A:M'
             ).execute()
 
             values = result.get('values', [])
@@ -409,7 +410,9 @@ class Database:
                         "status": row[7],
                         "eway_bill_number": row[8] if len(row) > 8 else None,
                         "invoice_number": row[9] if len(row) > 9 else None,
-                        "lorry_receipt_number": row[10] if len(row) > 10 else None
+                        "lorry_receipt_number": row[10] if len(row) > 10 else None,
+                        "transporter_name": row[11] if len(row) > 11 else None,
+                        "transporter_identifier": row[12] if len(row) > 12 else None
                     }
                     total_placed_capacity += int(row[3])
                     vehicles.append(vehicle)
@@ -417,11 +420,13 @@ class Database:
                     print(f"Error processing row: {str(e)}")
                     continue
 
+            print("Exiting for loop in get_vehicle_placements")
             # Apply pagination
             start_idx = 0
             end_idx = min(page_size, len(vehicles))
             vehicles = vehicles[start_idx:end_idx]
-
+            print(current_ship_id,total_placed_capacity,vehicles)
+            print("Exiting get_vehicle_placements")
             return {
                 "ship_id": current_ship_id,
                 "total_placed_capacity": total_placed_capacity,
