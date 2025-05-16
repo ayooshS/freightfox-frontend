@@ -478,23 +478,23 @@ class Database:
             import aiohttp
             import json
 
-            url = "https://service.showroom.indopus.in/ns/api/notification-adapter"
+            url = str(os.getenv("NOTIFICATION_URL"))
             
             notification_data = {
                 "event": event,
                 "to": {
-                    "email": email_list
+                    "email": [email_list]
                 },
                 "type": "single",
                 "payload": payload,
-                "userId": "12345"  # Using static userId as per sample
+                "userId": "12345"
             }
 
             headers = {
-                "SECRET_TOKEN": os.getenv('NOTIFICATION_SECRET'),
+                "SECRET_TOKEN": str(os.getenv("NOTIFICATION_SECRET")),
                 "Content-Type": "application/json"
             }
-
+                
             async with aiohttp.ClientSession() as session:
                 async with session.post(url, json=notification_data, headers=headers) as response:
                     if response.status != 200:
