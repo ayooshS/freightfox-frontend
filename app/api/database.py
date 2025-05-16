@@ -490,8 +490,13 @@ class Database:
                 "userId": "12345"  # Using static userId as per sample
             }
 
+            headers = {
+                "SECRET_TOKEN": "NOTIFICATION_SECRET",
+                "Content-Type": "application/json"
+            }
+
             async with aiohttp.ClientSession() as session:
-                async with session.post(url, json=notification_data) as response:
+                async with session.post(url, json=notification_data, headers=headers) as response:
                     if response.status != 200:
                         error_text = await response.text()
                         raise Exception(f"Notification service error: {error_text}")
