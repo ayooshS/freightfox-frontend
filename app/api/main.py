@@ -47,21 +47,26 @@ async def create_ship_order(order: ShipOrderCreate):
             # --- Build Response Object ---
             row = result[0]
             
+            # Ensure all payload values are properly formatted
+            notification_payload = {
+                "ship_order_id": str(row[0]) if row[0] else "",
+                "fulfilment_order_id": str(row[1]) if row[1] else "",
+                "buyer_name": str(row[2]) if row[2] else "",
+                "order_qty": int(row[3]) if row[3] else 0,
+                "unit_of_measurement": str(row[4]) if row[4] else "",
+                "pickup_address": str(row[5]) if row[5] else "",
+                "delivery_address": str(row[6]) if row[6] else "",
+                "product_sku": str(row[8]) if row[8] else "",
+                "product_description": str(row[9]) if row[9] else "",
+                "confirm_url": "www.bizongo.com",
+                "vehicle_number": "",
+                "status": "created"
+            }
+            
             await Database.send_notifications(
                 event="freight_fox_notifs-1",
                 email_list=["sabarish.r@bizongo.com"],
-                payload={
-                    "ship_order_id": row[0],
-                    "fulfilment_order_id": row[1],
-                    "buyer_name": row[2],
-                    "order_qty": int(row[3]),
-                    "unit_of_measurement": row[4],
-                    "pickup_address": row[5],
-                    "delivery_address": row[6],
-                    "product_sku": row[8],
-                    "product_description": row[9],
-                    "confirm_url": "www.bizongo.com"
-                }
+                payload=notification_payload
             )
             return ShipOrderResponse(
                 ship_order_id=row[0],
