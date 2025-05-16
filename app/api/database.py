@@ -369,56 +369,68 @@ class Database:
 
     @classmethod
     async def get_vehicle_placements(cls, page_size: int, transporter_id: Optional[str] = None, ship_order_id: Optional[str] = None):
-        sheets = cls.get_db()
-        result = sheets.values().get(
-            spreadsheetId=cls.SPREADSHEET_ID,
-            range='VehiclePlacements!A:K'
-        ).execute()
+        try:
+            sheets = cls.get_db()
+            if not sheets:
+                raise Exception("Database connection not available")
 
-        values = result.get('values', [])
-        if not values:
-            return [], 0
+            result = sheets.values().get(
+                spreadsheetId=cls.SPREADSHEET_ID,
+                range='VehiclePlacements!A:K'
+            ).execute()
 
-        vehicles = []
-        total_placed_capacity = 0
-        current_ship_id = None
+            values = result.get('values', [])
+            if not values:
+                return {"ship_id": None, "total_placed_capacity": 0, "vehicles": []}, 0
 
-        for row in values[1:]:  # Skip header row
-            if len(row) < 11:  # Make sure row has all required fields
-                continue
+            vehicles = []
+            total_placed_capacity = 0
+            current_ship_id = None
 
-            # Skip if filters don't match
-            if transporter_id and row[1] != transporter_id:
-                continue
-            if ship_order_id and row[0] != ship_order_id:
-                continue
+            for row in values[1:]:  # Skip header row
+                try:
+                    if len(row) < 11:  # Make sure row has all required fields
+                        continue
 
-            current_ship_id = row[0]
-            vehicle = {
-                "transporter_id": row[1],
-                "vehicle_number": row[2],
-                "capacity": int(row[3]),
-                "driver_name": row[4],
-                "driver_mobile_number": row[5],
-                "placement_date": row[6],
-                "status": row[7],
-                "eway_bill_number": row[8] if len(row) > 8 else None,
-                "invoice_number": row[9] if len(row) > 9 else None,
-                "lorry_receipt_number": row[10] if len(row) > 10 else None
-            }
-            total_placed_capacity += int(row[3])
-            vehicles.append(vehicle)
+                    # Skip if filters don't match
+                    if transporter_id and row[1] != transporter_id:
+                        continue
+                    if ship_order_id and row[0] != ship_order_id:
+                        continue
 
-        # Apply pagination
-        start_idx = 0
-        end_idx = min(page_size, len(vehicles))
-        vehicles = vehicles[start_idx:end_idx]
+                    current_ship_id = row[0]
+                    vehicle = {
+                        "transporter_id": row[1],
+                        "vehicle_number": row[2],
+                        "capacity": int(row[3]),
+                        "driver_name": row[4],
+                        "driver_mobile_number": row[5],
+                        "placement_date": row[6],
+                        "status": row[7],
+                        "eway_bill_number": row[8] if len(row) > 8 else None,
+                        "invoice_number": row[9] if len(row) > 9 else None,
+                        "lorry_receipt_number": row[10] if len(row) > 10 else None
+                    }
+                    total_placed_capacity += int(row[3])
+                    vehicles.append(vehicle)
+                except (IndexError, ValueError) as e:
+                    print(f"Error processing row: {str(e)}")
+                    continue
 
-        return {
-            "ship_id": current_ship_id,
-            "total_placed_capacity": total_placed_capacity,
-            "vehicles": vehicles
-        }, len(vehicles)
+            # Apply pagination
+            start_idx = 0
+            end_idx = min(page_size, len(vehicles))
+            vehicles = vehicles[start_idx:end_idx]
+
+            return {
+                "ship_id": current_ship_id,
+                "total_placed_capacity": total_placed_capacity,
+                "vehicles": vehicles
+            }, len(vehicles)
+
+        except Exception as e:
+            print(f"Error in get_vehicle_placements: {str(e)}")
+            raise Exception(f"Failed to get vehicle placements: {str(e)}")
 
     @classmethod
     async def get_transporters(cls, page_size: int = 10):
