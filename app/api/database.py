@@ -52,7 +52,7 @@ class Database:
 
             # Skip if status filter doesn't match (when provided)
             if status_filter and status_filter.lower() != "all":
-                current_status = row[11].lower() if len(row) > 11 else "new"
+                current_status = row[11].lower() 
                 filter_status = status_filter.lower()
                 
                 # Handle different filter cases
@@ -66,7 +66,7 @@ class Database:
                     continue
                 elif filter_status not in ["in_progress", "new", "accepted", "done", "all"]:
                     continue
-
+            # print("Ship Order",row[0])
             order = {
                 "ship_order_id": row[0],
                 "fulfilment_order_id": row[1],
@@ -88,7 +88,7 @@ class Database:
             orders.append(order)
 
         total_count = len(orders)
-        print("Total Count: ", total_count)
+        # print("Total Count: ", total_count)
         # Apply pagination
         start_idx = 0
         end_idx = min(page_size, total_count)
@@ -172,7 +172,8 @@ class Database:
             json.dumps(order_data["dispatch_plan"]),
             order_data["status"],
             order_data["transporter_id"],
-            current_time
+            current_time,
+            order_data["total_placed_capacity"]
         ]]
 
         try:

@@ -19,12 +19,13 @@ class ShipOrderCreate(BaseModel):
     product_sku: str
     product_description: str
     dispatch_plan: List[DispatchPlanEntry]
+    total_placed_capacity: Optional[int] = 0
 
 class ShipOrderResponse(BaseModel):
     ship_order_id: str
     fulfilment_order_id: str
     buyer_name: str
-    total_placed_capacity: Optional[int] = None
+    total_placed_capacity: Optional[int] = 0
     transporter_id: str
     status: str = "new"
     created_at: Optional[str] = None
