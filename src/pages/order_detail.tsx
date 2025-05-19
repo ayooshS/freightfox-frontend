@@ -1,4 +1,4 @@
-import {useNavigate, useLocation, useSearchParams} from "react-router-dom"
+import {useLocation, useNavigate, useSearchParams} from "react-router-dom"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {ScheduleDeliveryTab} from "@/components/ScheduleOrder/schedule_del_tab.tsx";
 import {OrderDetailsTab} from "@/components/ScheduleOrder/order_del_tab.tsx";
@@ -22,7 +22,7 @@ export default function OrderDetailPage() {
 	const buyerName = searchParams.get("company") || state?.buyerName || "N/A"
 	const dispatch = useDispatch()
 	const ordertype: string  = searchParams.get("order")!
-
+	const [isBufferConfirmed, setIsBufferConfirmed] = useState(false);
 
 
 	const {
@@ -39,6 +39,8 @@ export default function OrderDetailPage() {
 		vehicle,
 	} = state || {}
 
+	console.log("current tranporter id ", transporter_id)
+
 	const handleClick = () => {
 		if (ordertype === "new") {
 			navigate("/New-orders" + "?transporter_id=" + transporter_id)
@@ -50,6 +52,8 @@ export default function OrderDetailPage() {
 	useEffect(() => {
 		if (ordertype === "new") {
 			dispatch(addVehicle({
+				transporter_identifier: "",
+				transporter_name: "",
 				id: "",
 				transporter_id:transporter_id,
 				vehicle_number: "",
@@ -72,6 +76,7 @@ export default function OrderDetailPage() {
 	let disabledPlace = true;
 	let totalqty = 0
 	let maindisabled = false;
+	const bufferLimit = parseInt(order_qty) * 1.2;
 
 	for (const vehicle of vehicles) {
 		console.log(vehicle)
@@ -96,10 +101,13 @@ export default function OrderDetailPage() {
 	}
 
 	if(!maindisabled){
-		if (totalqty <= parseInt(order_qty)) {
-			disabledPlace = false;
-		}else if(totalqty > parseInt(order_qty)){
+
+		if (totalqty > bufferLimit) {
 			disabledPlace = true;
+		} else if (totalqty > parseInt(order_qty)) {
+			disabledPlace = !isBufferConfirmed;
+		} else {
+			disabledPlace = false;
 		}
 	}
 
@@ -138,7 +146,8 @@ export default function OrderDetailPage() {
 			if (data === "success") {
 				console.log("Vehicles placed successfully");
 
-				const { data: statusData, error: statusError } = await updateOrderStatus(ship_order_id);
+				const {data: statusData, error: statusError} = await updateOrderStatus(ship_order_id, transporter_id);
+
 
 				if (statusData === "success") {
 					console.log("Order status updated to accept");
@@ -220,6 +229,21 @@ export default function OrderDetailPage() {
 
 				<div className="shadow-customprimary bg-white px-xl-mobile pt-xl-mobile pb-xl-mobile sticky bottom-0">
 					{/* Progress bar on top */}
+					{totalqty > parseInt(order_qty) && totalqty <= bufferLimit && (
+						<label className="flex items-start gap-2 mb-2">
+							<input
+								type="checkbox"
+								checked={isBufferConfirmed}
+								onChange={() => setIsBufferConfirmed(!isBufferConfirmed)}
+								className="mt-1"
+							/>
+							<span className="text-sm text-text-secondary">
+      I’ve reviewed the buffer quantity and wish to proceed with placing the vehicle.
+    </span>
+						</label>
+					)}
+
+					{/* Progress bar on top */}
 					<div className="mb-2">
 						<p className="font-caption-lg-mobile text-text-tertiary">Total quantity added</p>
 						<span
@@ -227,9 +251,9 @@ export default function OrderDetailPage() {
 								"font-subtitle-lg-mobile",
 								totalqty > order_qty ? "text-red-500" : "text-text-action-press"
 							)}
-							>
-                             {totalqty}
-                        </span>
+						>
+    {totalqty}
+  </span>
 						<span className="font-subtitle-lg-mobile text-text-action-press">/{order_qty}MT</span>
 						<Progress value={totalqty} max={order_qty} className="mt-2"/>
 					</div>

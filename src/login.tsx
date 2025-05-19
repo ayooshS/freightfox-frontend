@@ -3,13 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "@/store/slice/authentication";
 import { Card } from "@/components/ui/card";
+import { umsClient } from "@/lib/apiHelper";
+import { decodeJwtToken, setJwtToken, setUserDetails } from "@/utils/authUtils";
 import { jwtDecode } from "jwt-decode";
 
-type GooglePayload = {
-	name: string;
-	email: string;
-	picture: string;
-	exp: number;
+type AuthVerifyResponse = {
+	jwt_token?: string;
+	sessions_available: boolean;
+	encrypted_token?: string;
+	active_sessions?: any[];
 };
 
 export default function SignInPage() {
@@ -20,7 +22,6 @@ export default function SignInPage() {
 		<main className="min-h-[100dvh] flex justify-center items-center bg-surface-secondary">
 			<div className="w-full max-w-[480px] p-4 bg-surface-tertiary h-[100dvh] flex items-center justify-center">
 				<Card className="w-full rounded-xl-mobile bg-surface-primary px-6 py-8 space-y-6 flex flex-col items-center text-center">
-
 					<img src="/Logo.svg" alt="logo" className="h-7 w-auto max-w-[120px]" />
 
 					<h1 className="font-subtitle-lg-mobile text-text-primary">
@@ -29,29 +30,68 @@ export default function SignInPage() {
 
 					<GoogleLogin
 						width="300"
-						onSuccess={(credentialResponse) => {
-							const token = credentialResponse.credential;
+						onSuccess={async (credentialResponse) => {
+							const googleToken = credentialResponse.credential;
+							if (!googleToken) return;
 
-							if (token) {
-								const decoded = jwtDecode<GooglePayload>(token);
-								console.log("Decoded exp (ms):", decoded.exp * 1000);
-								console.log("Readable:", new Date(decoded.exp * 1000).toString());
+							try {
+								const response = await umsClient.post<AuthVerifyResponse>(
+									"/auth-verify",
+									{},
+									{
+										headers: {
+											Authorization: googleToken,
+											IdentityProvider: "google",
+											Source: "InternalApp",
+										},
+									}
+								);
 
-								localStorage.setItem("auth_token", token);
+								console.log("✅ Auth Verify Response:", response);
 
-								dispatch(login({
-									isauthenticated: true,
-									name: decoded.name,
-									email: decoded.email,
-									picture: decoded.picture,
-									exp: decoded.exp,
-								}));
+								const { jwt_token, sessions_available, encrypted_token, active_sessions } = response.data;
 
-								navigate("/New-orders?transporter_id=T100");
+								if (jwt_token && sessions_available) {
+									setJwtToken(jwt_token);
+									localStorage.setItem("auth_token", jwt_token); // 👈 required for useAutoLogin
+
+									const decoded: any = decodeJwtToken(jwt_token);
+									const googleDecoded: any = jwtDecode(googleToken); // decode Google credential
+
+
+									// Save to localStorage for useAutoLogin fallback
+									localStorage.setItem("user_meta", JSON.stringify({
+										name: googleDecoded.name,
+										email: googleDecoded.email,
+										picture: googleDecoded.picture,
+									}));
+
+
+									setUserDetails(decoded);
+
+									const payload = {
+										isauthenticated: true,
+										name: decoded.name ?? googleDecoded.name,
+										email: decoded.email ?? googleDecoded.email,
+										picture: decoded.picture ?? googleDecoded.picture,
+										exp: decoded.exp,
+									};
+
+									console.log("📦 Dispatching login payload:", payload);
+									dispatch(login(payload));
+
+									navigate("/New-orders?transporter_id=T100");
+								} else if (encrypted_token && !sessions_available) {
+									localStorage.setItem("enc_token", encrypted_token);
+									console.log("Navigating to sessions", active_sessions);
+									navigate("/sessions", { state: { sessions: active_sessions } });
+								}
+							} catch (error) {
+								console.error("❌ Login failed at /auth-verify:", error);
 							}
 						}}
 						onError={() => {
-							console.log("Login Failed");
+							console.log("Google Login Failed");
 						}}
 					/>
 				</Card>

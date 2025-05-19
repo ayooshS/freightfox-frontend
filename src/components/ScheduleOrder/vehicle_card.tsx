@@ -1,6 +1,7 @@
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { useDispatch } from "react-redux"
 import {
+	VehicleTruckProfile24Regular,
 	VehicleTruckBagRegular,
 	NumberRow24Regular,
 	Person16Regular,
@@ -24,8 +25,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select"
-import { removeVehicle, Vehicle } from "@/store/slice/vehicleSlice"
+import {removeVehicle, updateVehicle, Vehicle} from "@/store/slice/vehicleSlice"
 import { cva, type VariantProps } from "class-variance-authority"
+import { getTransporters } from "@/lib/api"
+
 
 // ✅ Styling variants using cva
 const vehicleCardVariants = cva(
@@ -54,6 +57,9 @@ type VehicleCardProps = {
 	onInvoiceChange?: (val: string) => void
 	onEwayChange?: (val: string) => void
 	onLorryChange?: (val: string) => void
+	onTransporterChange?: (id: string, name: string) => void
+
+
 } & VariantProps<typeof vehicleCardVariants>
 
 export function VehicleCard({
@@ -111,6 +117,10 @@ export function VehicleCard({
 						onInvoiceChange={onInvoiceChange}
 						onEwayChange={onEwayChange}
 						onLorryChange={onLorryChange}
+						onTransporterChange={(val) =>
+							dispatch(updateVehicle({ ...vehicle, transporter_id: val }))
+						}
+
 
 					/>
 				) : (
@@ -120,6 +130,10 @@ export function VehicleCard({
 		</div>
 	)
 }
+
+
+
+
 
 // ✅ Edit mode UI
 function EditContent({
@@ -133,6 +147,7 @@ function EditContent({
 	                     onInvoiceChange,
 	                     onEwayChange,
 	                     onLorryChange,
+
                      }: {
 	vehicle: Vehicle
 	drawerOpen: boolean
@@ -144,19 +159,88 @@ function EditContent({
 	onInvoiceChange?: (val: string) => void
 	onEwayChange?: (val: string) => void
 	onLorryChange?: (val: string) => void
+	onTransporterChange?: (identifier: string, name: string) => void
+
 }) {
+	const dispatch = useDispatch()
 	const options = [10, 12, 15, 20, 25, 30, 35, 40, 42]
+	const [transporters, setTransporters] = useState<any[]>([])
+	const [transporterDrawerOpen, setTransporterDrawerOpen] = useState(false)
+
+
+
+	useEffect(() => {
+		async function fetchTransporters() {
+			try {
+				const { data, error } = await getTransporters()
+				if (data) {
+					setTransporters(data) // ✅ only set the array of transporters
+				} else {
+					console.error("API Error:", error)
+				}
+			} catch (err) {
+				console.error("Failed to fetch transporters", err)
+			}
+		}
+		fetchTransporters()
+	}, [])
+
+
 
 	return (
 		<>
 			{/* Quantity Picker */}
 			<div className="flex flex-col gap-xs-mobile">
 				<div className="flex gap-sm-mobile items-start">
+					<VehicleTruckProfile24Regular className="text-icon-primary w-4 h-4" />
+					<p className="font-caption-lg-mobile text-text-primary mb-2">Select Transporter</p>
+				</div>
+
+				<Button
+					variant="secondary"
+					size="lg"
+					className="w-full justify-between"
+					onClick={() => setTransporterDrawerOpen(true)}
+				>
+					<span>{vehicle.transporter_name ? `${vehicle.transporter_name} (${vehicle.transporter_id})` : "Choose Transporter"}</span>
+					<ChevronDown24Regular className="h-2 w-2 text-icon-primary" />
+				</Button>
+
+				<Drawer open={transporterDrawerOpen} onOpenChange={setTransporterDrawerOpen} direction="bottom">
+					<DrawerContent className="h-[50vh] rounded-t-2xl px-4 pt-4 space-y-2">
+						<DrawerHeader>
+							<DrawerTitle>Select Transporter</DrawerTitle>
+						</DrawerHeader>
+						<div className="flex flex-col overflow-y-auto">
+							{transporters.map((t) => (
+								<Button
+									className="w-full justify-start"
+									key={t.transporter_identifier}
+									variant={vehicle.transporter_id === t.transporter_identifier ? "default" : "ghost"}
+									onClick={() => {
+										dispatch(updateVehicle({
+											...vehicle,
+											transporter_identifier: t.transporter_identifier,
+											transporter_name: t.transporter_name
+										}))
+										setTransporterDrawerOpen(false)
+									}}
+								>
+									{t.transporter_name} ({t.transporter_identifier})
+								</Button>
+
+							))}
+						</div>
+					</DrawerContent>
+				</Drawer>
+
+
+				<div className="flex gap-sm-mobile items-start">
 					<VehicleTruckBagRegular className="text-icon-primary w-4 h-4" />
 					<p className="font-caption-lg-mobile text-text-primary mb-2">Quantity (MT)</p>
 				</div>
 				<Button
-					variant="outline"
+					variant="secondary"
 					size="lg"
 					className="w-full justify-between"
 					onClick={() => setDrawerOpen(true)}
@@ -242,7 +326,7 @@ function EditContent({
 					</div>
 				</div>
 
-				
+
 			</div>
 
 

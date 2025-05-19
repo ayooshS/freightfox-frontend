@@ -21,6 +21,7 @@ export type Order = {
 	product_description: string; // e.g. "Test Product"
 	dispatch_plan: DispatchEntry[];
 	buyer_name: string;
+
 }
 
 type OrderState = {
