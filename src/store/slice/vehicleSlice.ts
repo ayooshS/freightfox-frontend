@@ -15,6 +15,9 @@ export type Vehicle = {
 	invoice_number: string;
 	lorry_receipt_number: string;
 	state: string
+	transporter_identifier: string;
+	transporter_name: string;
+
 }
 
 type VehicleState = {
@@ -43,6 +46,8 @@ const vehicleSlice = createSlice({
 					invoice_number: action.payload.invoice_number,
 					lorry_receipt_number: action.payload.lorry_receipt_number,
 					state: action.payload.state,
+					transporter_identifier: action.payload.transporter_identifier,
+					transporter_name: action.payload.transporter_name,
 				})
 
 		},

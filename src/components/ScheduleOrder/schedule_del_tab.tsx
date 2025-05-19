@@ -7,12 +7,18 @@ import {VehicleCard} from "@/components/ScheduleOrder/vehicle_card.tsx";
 
 
 
-export function ScheduleDeliveryTab({ ordertype, vehicles, disabledAdd, transporter_id }: { ordertype: string , vehicles: Vehicle[], disabledAdd: boolean, transporter_id: string }) {
+export function ScheduleDeliveryTab({
+	                                    ordertype,
+	                                    vehicles,
+	                                    disabledAdd,
+	                                    transporter_id,
+                                    }: {
+	ordertype: string
+	vehicles: Vehicle[]
+	disabledAdd: boolean
+	transporter_id: string
+}) {
 	const dispatch = useDispatch()
-
-
-
-
 
 	return (
 		<div className="pb-4 pt-4">
@@ -21,7 +27,7 @@ export function ScheduleDeliveryTab({ ordertype, vehicles, disabledAdd, transpor
 					key={index}
 					index={index}
 					vehicle={vehicle}
-					type={ordertype === "existing" && vehicle.state!=="new" ? "view" : "edit"}
+					type={ordertype === "existing" && vehicle.state !== "new" ? "view" : "edit"}
 					onVehicleNoChange={(val) =>
 						dispatch(updateVehicle({ ...vehicle, vehicle_number: val }))
 					}
@@ -43,18 +49,23 @@ export function ScheduleDeliveryTab({ ordertype, vehicles, disabledAdd, transpor
 					onLorryChange={(val) =>
 						dispatch(updateVehicle({ ...vehicle, lorry_receipt_number: val }))
 					}
+					onTransporterChange={(val) =>
+						dispatch(updateVehicle({ ...vehicle, transporter_id: val }))
+					}
 				/>
 			))}
 
-
-				<Button
-					variant="link"
-					size="lg"
-					disabled={disabledAdd}
-					onClick={() =>
-						dispatch(addVehicle({
+			<Button
+				variant="link"
+				size="lg"
+				disabled={disabledAdd}
+				onClick={() =>
+					dispatch(
+						addVehicle({
+							transporter_identifier: "",
+							transporter_name: "",
 							id: "",
-							transporter_id:transporter_id,
+							transporter_id: transporter_id,
 							vehicle_number: "",
 							capacity: 0,
 							driver_mobile_number: "",
@@ -64,13 +75,13 @@ export function ScheduleDeliveryTab({ ordertype, vehicles, disabledAdd, transpor
 							invoice_number: "",
 							lorry_receipt_number: "",
 							state: "new"
-						}))
-					}
-				>
-					<AddCircle20Regular />
-					Add Another Vehicle
-				</Button>
-
+						})
+					)
+				}
+			>
+				<AddCircle20Regular />
+				Add Another Vehicle
+			</Button>
 		</div>
 	)
 }

@@ -6,16 +6,19 @@ import { ActiveTripsPage } from "@/pages/active_trips.tsx";
 import { MyOrdersPage } from "@/pages/my_orders.tsx";
 import OrderDetailPage from "@/pages/order_detail.tsx";
 import SignInPage from "@/login";
+ // ✅ Add this import
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAutoLogin } from "@/hooks/useAutoLogin";
+import SessionsPage from "@/Sessions.tsx";
+
 
 function AppContent() {
     useAutoLogin();
 
-
     return (
         <Routes>
             <Route path="/" element={<SignInPage />} />
+            <Route path="/sessions" element={<SessionsPage />} />
 
             <Route
                 element={

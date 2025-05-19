@@ -40,16 +40,6 @@ export default function MyOrderCard({
 	const [searchParams] = useSearchParams()
 	const transporterID: string  = searchParams.get("transporter_id")!
 
-	// const {
-	// 	data: vehicles = [],
-	// } = useQuery({
-	// 	queryKey: ['vehiclePlacements', ship_order_id],
-	// 	queryFn: () =>
-	// 		getVehiclePlacements({
-	// 			transporter_id: "T100",
-	// 			ship_order_id,
-	// 		}),
-	// })
 
 	const derivedStatus = total_placed_capacity < order_qty ? "in-progress" : "done"
 

@@ -7,7 +7,7 @@ import { PickupDropInfo } from "@/components/NewOrders/pickup_drop_info.tsx"
 import { MoreSelection } from "@/components/NewOrders/more_selection.tsx"
 import RequestDetailDrawer from "@/components/NewOrders/Drawer/request_order_drawer.tsx"
 import { rejectOrder } from "@/lib/api.ts"
-import { cn } from "@/lib/utils" // required for conditional class merging
+import { cn } from "@/lib/utils"
 
 type DispatchEntry = {
     vehicle: number
@@ -29,6 +29,7 @@ type RequestCardProps = {
     dispatch_plan: DispatchEntry[]
     buyer_name: string
     refetch: () => void
+    showPing?: boolean
 }
 
 export default function RequestCard({
@@ -43,19 +44,20 @@ export default function RequestCard({
                                         dispatch_plan,
                                         transporter_id,
                                         refetch,
+                                        showPing,
                                     }: RequestCardProps) {
     const [rejecterror, setRejecterror] = useState<string | null>(null)
     const [rejectStatus, setRejectStatus] = useState("")
     const [isDismissed, setIsDismissed] = useState(false)
 
     async function onReject() {
-        const { data, error } = await rejectOrder(ship_order_id)
+        const { data, error } = await rejectOrder(ship_order_id, transporter_id)
         if (data === "success") {
-            setIsDismissed(true) // start animation
+            setIsDismissed(true)
             setTimeout(() => {
                 setRejectStatus(data)
                 refetch()
-            }, 300) // wait for transition to finish
+            }, 300)
         } else {
             setRejecterror(error)
         }
@@ -71,10 +73,16 @@ export default function RequestCard({
             {/* Header section */}
             <div className="flex flex-col">
                 <div className="flex justify-between items-center w-full">
-                    <div className="flex items-center gap-2">
-            <span className="font-overline-sm-mobile text-text-tertiary">
-              Ship ID: {ship_order_id}
-            </span>
+                    <div className="flex items-center gap-2 relative">
+                        {showPing && (
+                            <span className="absolute -left-6 -top-5 flex h-4 w-4">
+								<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+								<span className="relative inline-flex rounded-full h-4 w-4 bg-green-500"></span>
+							</span>
+                        )}
+                        <span className="font-overline-sm-mobile text-text-tertiary">
+							Ship ID: {ship_order_id}
+						</span>
                         <Badge variant="default" text="Aluminium" />
                     </div>
                     <MoreSelection
