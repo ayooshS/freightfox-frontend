@@ -10,7 +10,8 @@ import {Button} from "@/components/ui/button.tsx"
 import {cn} from "@/lib/utils.ts"
 import {Box16Regular, Scales24Regular} from "@fluentui/react-icons";
 import {DeliveryDetailsDrawer} from "@/components/NewOrders/Drawer/delivery_dets_drawer.tsx";
-import {DispatchDetailsDrawer} from "@/components/NewOrders/Drawer/dispatch_dets_drawer.tsx";
+// import {DispatchDetailsDrawer} from "@/components/NewOrders/Drawer/dispatch_dets_drawer.tsx";
+import {useNavigate} from "react-router-dom";
 
 
 type DispatchEntry = {
@@ -21,28 +22,58 @@ type DispatchEntry = {
 
 type Props = {
 	triggerButton: React.ReactNode
-	buyerName: string
-	poNumber: string
-	productDetails: string
-	quantity: string
-	pickupAddress: string
-	dropAddress: string
-	rate: string
-	dispatchData: DispatchEntry[] // ✅ add this
+	buyer_name: string
+	ship_order_id: string
+	product_sku: string
+	order_qty: number
+	pickup_address: string
+	delivery_address: string
+	booked_rate: number
+	product_description: string;
+	dispatch_plan: DispatchEntry[] // ✅ add this
+	transporter_id: string;
 }
 
 
 export default function RequestDetailDrawer({
 	                                            triggerButton,
-	                                            buyerName,
-	                                            poNumber,
-	                                            productDetails,
-	                                            quantity,
-	                                            pickupAddress,
-	                                            dropAddress,
-	                                            dispatchData,
-	                                            rate
+	                                            buyer_name,
+	                                            ship_order_id,
+	                                            product_sku,
+	                                            order_qty,
+	                                            pickup_address,
+	                                            delivery_address,
+	                                            dispatch_plan,
+	                                            booked_rate,
+	                                            product_description,
+												transporter_id,
                                             }: Props) {
+
+	// const dispatch = useDispatch();
+
+	const navigate = useNavigate();
+
+	const handleAccept = () => {
+
+		navigate(`/order-detail?company=${encodeURIComponent(ship_order_id)}&order=new`, {
+			state: {
+				ship_order_id,
+				status:"",
+				order_qty,
+				pickup_address,
+				delivery_address,
+				booked_rate,
+				product_sku,
+				product_description,
+				dispatch_plan,
+				transporter_id,
+				vehicle: []
+			},
+		})
+	}
+
+
+
 	return (
 		<Drawer direction="bottom">
 			<DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
@@ -58,38 +89,47 @@ export default function RequestDetailDrawer({
 				<div className="overflow-y-auto flex-1 space-y-4 px-xl-mobile">
 					<DrawerHeader>
 						<DrawerDescription className="font-overline-sm-mobile text-text-tertiary">
-							PO #{poNumber}
+							Ship ID:{ship_order_id}
 						</DrawerDescription>
-						<DrawerTitle className="font-body-lg-mobile text-text-primary ">{buyerName}</DrawerTitle>
+						<DrawerTitle className="font-body-lg-mobile text-text-primary ">{buyer_name}</DrawerTitle>
 
 					</DrawerHeader>
 
-					<div className="font-caption-lg-mobile text-text-primary">
+
 						<div className="flex justify-between">
-							<div className="flex flex-row items-start gap-xs-mobile w-[65%]">
-								<Box16Regular style={{width: 16, height: 16}}/>
-								<p>{productDetails}</p>
+							<div className="flex gap-xs-mobile">
+								<div className="flex flex-col items-center gap-md-mobile">
+									<div className="flex items-start gap-xs-mobile">
+										<Box16Regular style={{ width: 20, height: 20 }} />
+										<p className="font-body-lg-mobile text-text-primary">{product_sku}</p>
+									</div>
+									<p className="font-body-base-mobile text-text-secondary">{product_description}</p>
+								</div>
+
+								{/* You can remove this empty gap if unnecessary */}
 							</div>
 
-							<div className="flex flex-row items-start gap-xs-mobile">
-								<Scales24Regular style={{width: 16, height: 16}}/>
-								<p>{quantity} MT</p>
+							<div className="flex items-start gap-xs-mobile">
+								<Scales24Regular style={{ width: 20, height: 20 }} />
+								<p className="font-body-lg-mobile text-text-primary">{order_qty} MT</p>
 							</div>
 						</div>
-					</div>
+
+
 
 					{/*delivery details*/}
 					<DeliveryDetailsDrawer
-						pickupAddress={pickupAddress}
-						dropAddress={dropAddress}
+						pickup_address={pickup_address}
+						delivery_address={delivery_address}
+						bgColorClass="bg-surface-secondary"
 					/>
 
 					{/*dispatch plan*/}
 
-					<DispatchDetailsDrawer
-						dispatchData={dispatchData}
-						rate={rate}
-					/>
+					{/*<DispatchDetailsDrawer*/}
+					{/*	dispatch_plan={dispatch_plan}*/}
+					{/*	booked_rate={booked_rate}*/}
+					{/*/>*/}
 
 
 				</div>
@@ -101,9 +141,11 @@ export default function RequestDetailDrawer({
 						className="w-full"
 						variant="default"
 						size="lg"
+						onClick={handleAccept}
 					>
 						Accept & Continue
 					</Button>
+
 				</div>
 			</DrawerContent>
 		</Drawer>

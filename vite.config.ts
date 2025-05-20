@@ -1,20 +1,35 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
-import path from "path";
+// vite.config.ts
+import { defineConfig, loadEnv } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+import path from 'path'
 
-// https://vite.dev/config/
-export default defineConfig({
-    plugins: [react(), tailwindcss()],
-    resolve: {
-        alias: {
-            "@": path.resolve(__dirname, "./src"),
+export default defineConfig(({ mode }) => {
+    const env = loadEnv(mode, process.cwd(), '')
+
+    return {
+        plugins: [
+            react(),
+            tailwindcss(),
+        ],
+        resolve: {
+            alias: {
+                '@': path.resolve(__dirname, './src'),
+            },
         },
-    },
-    server: {
-        allowedHosts: [
-            "sure-antelope-smooth.ngrok-free.app",
-            "7bf5a057-7a03-49d8-8426-14d6bcbfec9d-00-36g3647l70hve.pike.replit.dev",
-        ], // 👈 add your ngrok domain here
-    },
-});
+        server: {
+            port: Number(env.PORT) || 7002,
+            allowedHosts: [
+                env.ALLOWED_HOST || 'all',
+            ],
+        },
+        preview: {
+            port: 4173,
+            host: true,
+            allowedHosts: ["e5f2-2401-4900-61ae-8e11-ed79-7181-a196-94fc.ngrok-free.app"], // ✅ critical for ngrok!
+        },
+        define: {
+            'process.env': env,
+        },
+    }
+})

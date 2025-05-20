@@ -94,13 +94,13 @@ N --> N4[Render: Skeleton or RequestCard]
 
 %% RequestCard Structure
 N4 --> RC[RequestCard]
-RC --> RC1[Header: PO, Material, Menu]
+RC --> RC1[Header: SO, Material, Menu]
 RC --> RC2[PickupDropInfo]
 RC --> RC3[Trigger → RequestDetailDrawer]
 
 %% Drawer Content
 RC3 --> DR[RequestDetailDrawer]
-DR --> DR1[DrawerHeader: Buyer Name, PO]
+DR --> DR1[DrawerHeader: Buyer Name, SO]
 DR --> DR2[Product Summary]
 DR --> DR3[DeliveryDetailsDrawer]
 DR --> DR4[DispatchDetailsDrawer]
@@ -172,7 +172,7 @@ graph TD
 ```mermaid
 graph TD
 
-OrderType[Order Type: poNumber, material, productName, quantity, rate, pickupAddress, dropAddress, buyerName, dispatchData]
+OrderType[Order Type: ship_order_id, material, product_sku, order_qty, booked_rate, pickup_address, delivery_address, buyerName, dispatchData]
 
 OrderType --> NewOrderPage
 OrderType --> RequestCard
@@ -196,13 +196,13 @@ type DispatchEntry = {
 }
 
 type Order = {
-  poNumber: string
+  ship_order_id: string
   material: string
-  productName: string
-  quantity: string
-  rate: string
-  pickupAddress: string
-  dropAddress: string
+  product_sku: string
+  order_qty: string
+  booked_rate: string
+  pickup_address: string
+  delivery_address: string
   buyerName: string
   dispatchData: DispatchEntry[]
 }
@@ -220,13 +220,13 @@ type Order = {
 classDiagram
 
 class RequestCard {
-  +string poNumber
+  +string ship_order_id
   +string material
-  +string productName
-  +string quantity
-  +string rate
-  +string pickupAddress
-  +string dropAddress
+  +string product_sku
+  +string order_qty
+  +string booked_rate
+  +string pickup_address
+  +string delivery_address
   +string buyerName
   +DispatchEntry[] dispatchData
   +onReject(): void
@@ -234,36 +234,36 @@ class RequestCard {
 }
 
 class MoreSelection {
-  +string poNumber
-  +string dropAddress
+  +string ship_order_id
+  +string delivery_address
   +onReject(): void
 }
 
 class PickupDropInfo {
-  +string pickupAddress
-  +string dropAddress
+  +string pickup_address
+  +string delivery_address
 }
 
 class RequestDetailDrawer {
-  +string poNumber
+  +string ship_order_id
   +string buyerName
   +string productDetails
-  +string quantity
-  +string pickupAddress
-  +string dropAddress
-  +string rate
+  +string order_qty
+  +string pickup_address
+  +string delivery_address
+  +string booked_rate
   +DispatchEntry[] dispatchData
 }
 
 class DeliveryDetailsDrawer {
-  +string pickupAddress
-  +string dropAddress
+  +string pickup_address
+  +string delivery_address
   +string? distance
 }
 
 class DispatchDetailsDrawer {
   +DispatchEntry[] dispatchData
-  +number rate
+  +number booked_rate
 }
 
 class DispatchEntry {
@@ -289,7 +289,7 @@ class DispatchEntry {
 - 🔗 Integrate real API using fetchOrders or TanStack Query for paginated, cache-friendly data fetching
 - 🚫 Add Empty State UI when no orders are available
 - 🔍 Implement filters (e.g., by material, buyer, route length)
-- 📄 Add PO Detail Page to view order-specific timeline, logs, and route tracking
+- 📄 Add SO Detail Page to view order-specific timeline, logs, and route tracking
 - 📱 Enable swipe-to-reject or pull-to-refresh gestures on mobile
 - 🏷 Replace product string with chip-style product tags
 - 📦 Integrate transport/dispatch analytics per vehicle or material type

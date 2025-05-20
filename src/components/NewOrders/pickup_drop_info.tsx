@@ -3,11 +3,11 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 
 export function PickupDropInfo({
-                                   pickupAddress,
-                                   dropAddress,
+                                   pickup_address,
+                                   delivery_address,
                                }: {
-    pickupAddress: string
-    dropAddress: string
+    pickup_address: string
+    delivery_address: string
 }) {
     return (
         <div className="flex justify-between items-start relative px-1">
@@ -20,7 +20,7 @@ export function PickupDropInfo({
                 />
                 <span className="font-overline-sm-mobile text-text-tertiary">Pickup</span>
                 <p className="font-caption-lg-mobile text-left text-text-primary line-clamp-2 break-words">
-                    {pickupAddress}
+                    {pickup_address}
                 </p>
             </div>
 
@@ -41,7 +41,7 @@ export function PickupDropInfo({
                 />
                 <span className="font-overline-sm-mobile text-text-tertiary">Drop</span>
                 <p className="font-caption-lg-mobile text-right text-text-primary line-clamp-2 break-words">
-                    {dropAddress}
+                    {delivery_address}
                 </p>
             </div>
         </div>
